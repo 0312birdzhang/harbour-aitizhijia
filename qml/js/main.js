@@ -80,6 +80,7 @@ function loadNewsList(oritxt){
             }
             newsListPage.listmodel.append(obj.newslist[i]);
         }
+        newsListPage.listView.scrollToTop();
     }
     else signalcenter.showMessage(obj.error);
 }
@@ -94,7 +95,8 @@ function getNewsDetail(newsid){
 
 
 
-function humanedate(thatday){
+function humanedate(utcDateStr){
+    var thatday = new Date(utcDateStr)
     var _dateline = thatday.getTime();
     var now = new Date().getTime();
     var cha=(now-_dateline)/1000;

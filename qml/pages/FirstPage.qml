@@ -4,6 +4,8 @@ import "../js/main.js" as JS
 
 Page {
     id: newspage
+    property alias listmodel: listmodel
+    property alias listView: listView
     property int page : 0
     allowedOrientations: Orientation.All
 
@@ -11,11 +13,19 @@ Page {
         id: listmodel
     }
 
+    onPageChanged: {
+        console.log("page changed:"+page)
+        JS.getNewsList(page)
+    }
 
     SilicaListView{
         id: listView
         anchors.fill: parent
         clip: true
+        header: PageHeader{
+            title: "IT之家"
+        }
+
         PullDownMenu {
             MenuItem {
                 text: qsTr("Refresh")
@@ -101,8 +111,8 @@ Page {
                 }
                 onClicked: {
                     pageStack.push(Qt.resolvedUrl("NewsDetail.qml"),{
-                                       "newsid":newid,
-                                       "newstitle":newstitle
+                                       "newsid":newsid,
+                                       "newstitle":title
                                    });
                 }
         }
@@ -111,7 +121,7 @@ Page {
 
             Item {
                 id: loadMoreID
-                visible: loading
+                visible: !loading
                 anchors {
                     left: parent.left;
                     right: parent.right;
@@ -126,14 +136,12 @@ Page {
                         visible: page > 0
                         onClicked: {
                             page--;
-                            
                         }
                     }
                     Button{
                         text:"下一页"
                         onClicked: {
                             page++;
-                            
                         }
                     }
                 }
@@ -141,10 +149,10 @@ Page {
 
         }
 
-        VerticalScrollDecorator {flickable: view}
+        VerticalScrollDecorator {flickable: listView}
 
         ViewPlaceholder {
-            enabled: view.count == 0 && !PageStatus.Active
+            enabled: listView.count == 0 && !PageStatus.Active
             text: "无结果，点击重试"
             MouseArea{
                 anchors.fill: parent

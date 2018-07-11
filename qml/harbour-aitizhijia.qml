@@ -65,7 +65,6 @@ ApplicationWindow
 
     SignalCenter{
         id: signalCenter;
-
     }
 
     Component.onCompleted: {
