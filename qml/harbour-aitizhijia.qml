@@ -68,6 +68,6 @@ ApplicationWindow
     }
 
     Component.onCompleted: {
-        JS.signalcenter = signalCenter;
+        JS.signalcenter = signalCenter
     }
 }

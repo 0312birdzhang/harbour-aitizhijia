@@ -121,7 +121,7 @@ Page {
 
             Item {
                 id: loadMoreID
-                visible: !loading
+                visible: false
                 anchors {
                     left: parent.left;
                     right: parent.right;
@@ -135,13 +135,13 @@ Page {
                         text: "上一页"
                         visible: page > 0
                         onClicked: {
-                            page--;
+                            page = listmodel.get(0).newsid;
                         }
                     }
                     Button{
                         text:"下一页"
                         onClicked: {
-                            page++;
+                            page = listmodel.get(-1).newsid;
                         }
                     }
                 }
@@ -166,6 +166,7 @@ Page {
 
 
     Component.onCompleted: {
+        JS.signalcenter = signalCenter
         JS.newsListPage = newspage;
         JS.getNewsList(page);
     }
