@@ -65,7 +65,7 @@ Page {
                 id:contentbody
                 opacity: 0.8
                 textFormat: Text.RichText
-                text:detail.replace(/<img/g, '<img width="100%"')
+                text:detail.replace(/<img/g, '<img width="'+ (parent.width - Theme.paddingLarge)+'"')
                 font.pixelSize: Theme.fontSizeExtraSmall
                 wrapMode: Text.WordWrap
                 linkColor:Theme.primaryColor

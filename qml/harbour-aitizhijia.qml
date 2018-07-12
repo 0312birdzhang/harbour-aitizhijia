@@ -46,6 +46,10 @@ ApplicationWindow
         size: BusyIndicatorSize.Large
     }
 
+    RemorsePopup{
+        id: remorse
+    }
+
     Connections{
         target: signalCenter;
         onLoadStarted:{

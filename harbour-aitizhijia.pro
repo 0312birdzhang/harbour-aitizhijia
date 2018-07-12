@@ -26,7 +26,8 @@ DISTFILES += qml/harbour-aitizhijia.qml \
     qml/js/main.js \
     qml/js/api.js \
     qml/pages/NewsDetail.qml \
-    qml/pages/SignalCenter.qml
+    qml/pages/SignalCenter.qml \
+    qml/js/base64.js
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172
 
