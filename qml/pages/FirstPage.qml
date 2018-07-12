@@ -6,17 +6,54 @@ Page {
     id: newspage
     property alias listmodel: listmodel
     property alias listView: listView
-    property int page : 0
     allowedOrientations: Orientation.All
 
     ListModel{
         id: listmodel
     }
 
-    onPageChanged: {
-        console.log("page changed:"+page)
-        JS.getNewsList(page)
+    XmlListModel {
+        id: xmlModel
+        query: "/rss/channel/item"
+        XmlRole { name: "newsid"; query: "newsid/int()" }
+        XmlRole { name: "title"; query: "title/string()" }
+        XmlRole { name: "postdate"; query: "postdate/string()" }
+        XmlRole { name: "description"; query: "description/string()" }
+        XmlRole { name: "hitcount"; query: "hitcount/int()" }
+        XmlRole { name: "commentcount"; query: "commentcount/int()" }
+        onStatusChanged: {
+            switch(status){
+            case XmlListModel.Ready:
+                for (var i=0; i<count; i++) {
+                    var item = get(i)
+                    listmodel.append({newsid: item.newsid,
+                                        title: item.title,
+                                        postdate: item.postdate,
+                                        description: item.description,
+                                        hitcount: item.hitcount,
+                                        commentcount: item.commentcount
+                                        });
+                }
+                signalCenter.loadFinished();
+                break;
+            case XmlListModel.Loading:
+                signalCenter.loadStarted();
+                break;
+            case XmlListModel.Error:
+                signalCenter.loadFailed(errorString());
+            }
+
+        }
+
     }
+
+    function loadMore(newsid){
+        var url = JS.getMoreNews(newsid);
+        xmlModel.source = url;
+        xmlModel.reload();
+    }
+
+
 
     SilicaListView{
         id: listView
@@ -28,7 +65,7 @@ Page {
 
         PullDownMenu {
             MenuItem {
-                text: qsTr("Refresh")
+                text: "刷新"
                 onClicked: JS.getNewsList();
             }
         }
@@ -131,17 +168,12 @@ Page {
                     id:footItem
                     spacing: Theme.paddingLarge
                     anchors.horizontalCenter: parent.horizontalCenter
-                    Button {
-                        text: "上一页"
-                        visible: page > 0
-                        onClicked: {
-                            page = listmodel.get(0).newsid;
-                        }
-                    }
+                   
                     Button{
-                        text:"下一页"
+                        text: "加载更多..."
                         onClicked: {
-                            page = listmodel.get(-1).newsid;
+                            newsid = listmodel.get(-1).newsid;
+                            loadMore(newsid)
                         }
                     }
                 }
@@ -157,7 +189,7 @@ Page {
             MouseArea{
                 anchors.fill: parent
                 onClicked: {
-                    JS.getNewsList(page);
+                    JS.getNewsList();
                 }
             }
         }
@@ -168,6 +200,6 @@ Page {
     Component.onCompleted: {
         JS.signalcenter = signalCenter
         JS.newsListPage = newspage;
-        JS.getNewsList(page);
+        JS.getNewsList();
     }
 }

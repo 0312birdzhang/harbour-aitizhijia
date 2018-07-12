@@ -1,4 +1,5 @@
 .pragma library
+
 Qt.include("api.js")
 
 var signalcenter;
@@ -83,6 +84,11 @@ function loadNewsList(oritxt){
         newsListPage.listView.scrollToTop();
     }
     else signalcenter.showMessage(obj.error);
+}
+
+
+function getMoreNews(newsid){
+    return loadMore(newsid)
 }
 
 
