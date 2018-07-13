@@ -7,7 +7,7 @@ function getApiBase(){
     return "https://api.ithome.com/"
 }
 function newslist(){
-   return getApiBase() + "newslist/news.xml";
+   return getApiBase() + "json/newslist/news?r=0";
 }
 
 function loadMore(newsid){

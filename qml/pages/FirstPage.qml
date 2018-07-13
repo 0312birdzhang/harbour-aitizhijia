@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.XmlListModel 2.0
 import Sailfish.Silica 1.0
 import "../js/main.js" as JS
 
@@ -12,20 +13,33 @@ Page {
         id: listmodel
     }
 
+    function fmtTime(postdate) {
+        if(postdate.indexOf("T")){
+            postdate = postdate.replace("T"," ");
+        }
+        var month = parseInt(postdate.split("-")[1]);
+        if( month < 10){
+            postdate = postdate.replace("-"+month+"-", "-0"+month+"-");
+        }
+        var txt = Format.formatDate(new Date(postdate), Formatter.Timepoint)
+        var elapsed = Format.formatDate(new Date(postdate), Formatter.DurationElapsed)
+        return elapsed ? elapsed : txt
+    }
+
     XmlListModel {
         id: xmlModel
         query: "/rss/channel/item"
-        XmlRole { name: "newsid"; query: "newsid/int()" }
+        XmlRole { name: "newsid"; query: "newsid/number()" }
         XmlRole { name: "title"; query: "title/string()" }
         XmlRole { name: "postdate"; query: "postdate/string()" }
         XmlRole { name: "description"; query: "description/string()" }
-        XmlRole { name: "hitcount"; query: "hitcount/int()" }
-        XmlRole { name: "commentcount"; query: "commentcount/int()" }
+        XmlRole { name: "hitcount"; query: "hitcount/number()" }
+        XmlRole { name: "commentcount"; query: "commentcount/number()" }
         onStatusChanged: {
             switch(status){
             case XmlListModel.Ready:
                 for (var i=0; i<count; i++) {
-                    var item = get(i)
+                    var item = get(i);
                     listmodel.append({newsid: item.newsid,
                                         title: item.title,
                                         postdate: item.postdate,
@@ -112,7 +126,8 @@ Page {
                 }
                 Label{
                     id:timeid
-                    text: "发布时间 : "+ JS.humanedate(postdate)
+
+                    text: "发布时间 : " +  fmtTime(postdate) //JS.humanedate(postdate)
                     //opacity: 0.7
                     font.pixelSize: Theme.fontSizeTiny
                     //font.italic: true
@@ -158,7 +173,6 @@ Page {
 
             Item {
                 id: loadMoreID
-                visible: false
                 anchors {
                     left: parent.left;
                     right: parent.right;
@@ -172,7 +186,7 @@ Page {
                     Button{
                         text: "加载更多..."
                         onClicked: {
-                            newsid = listmodel.get(-1).newsid;
+                            var newsid = listmodel.get(listmodel.count-1).newsid;
                             loadMore(newsid)
                         }
                     }
