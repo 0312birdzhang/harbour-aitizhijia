@@ -3,21 +3,47 @@ Qt.include("mode-ecb-min.js")
 Qt.include("pad-nopadding-min.js")
 Qt.include("base64.js")
 
+var key = "p#a@w^s(";
+
 function getApiBase(){
     return "https://api.ithome.com/"
 }
+
+function getDynBase(){
+    return "https://dyn.ithome.com/"
+}
+
 function newslist(){
    return getApiBase() + "json/newslist/news?r=0";
 }
 
 function loadMore(newsid){
-    var prevNewsid = getMiniNewsId(newsid);
+    var prevNewsid = getLoadMoreId(newsid);
     return getApiBase() + "xml/newslist/news_"+ prevNewsid +".xml"
 }
 
 function newsdetail(newsid){
     return getApiBase() + "xml/newscontent/"+ newsid.toString().slice(0,3) +"/"+newsid.toString().slice(3,6)+".xml"
 }
+
+function getComments(newsid_des){
+    return getDynBase() + "json/commentlist/350/"+ newsid_des +".json"
+}
+
+function getHotCommentlist(newsid_des){
+    return getDynBase() + "json/hotcommentlist/350/" + newsid_des +".json"
+}
+
+function getCommentDetail(newsid_des){
+    return getDynBase() + "json/commentcontent/"+ newsid_des + ".json"
+}
+
+function getSlide(){
+    return getApiBase() + "xml/slide/slide.xml";
+}
+
+
+
 
 function encryptByDES(message, key) {
     var keyHex = CryptoJS.enc.Utf8.parse(key);
@@ -30,8 +56,8 @@ function encryptByDES(message, key) {
 }
 
 
-function getMiniNewsId(newsid) {
-    var key = "p#a@w^s(";
+function getLoadMoreId(newsid) {
+    
     var index = 0;
     var i = newsid.toString().length;
     if (i < 8) {

@@ -1,6 +1,8 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Notifications 1.0
+import Nemo.Configuration 1.0
+
 
 import "pages"
 import "js/main.js" as JS
@@ -12,6 +14,12 @@ ApplicationWindow
     initialPage: Component { FirstPage { } }
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
+
+    ConfigurationGroup{
+        id: config
+        path: "/app/xyz.birdzhang.aitizhijia"
+        property bool accepted: false
+    }
 
     Notification{
         id: notification
