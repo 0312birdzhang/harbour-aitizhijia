@@ -11,7 +11,7 @@ ApplicationWindow
 {
     id: appwindow
     property bool loading: false
-    initialPage: Component { FirstPage { } }
+    initialPage: config.accepted ? firstpage : discclaimer
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
 
@@ -77,6 +77,18 @@ ApplicationWindow
 
     SignalCenter{
         id: signalCenter;
+    }
+    Component {
+        id: firstpage
+        FirstPage {
+        }
+    }
+    Component{
+        id:discclaimer
+        DisclaimerDialog{
+            acceptDestination: firstpage
+            acceptDestinationAction: PageStackAction.Replace
+        }
     }
 
     Component.onCompleted: {

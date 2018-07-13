@@ -65,9 +65,8 @@ function doesFileExist(url, callback){
 
 var newsListPage;
 
-function getNewsList(pageNum){
-    if(!pageNum)pageNum=0;
-    var url = newslist(pageNum);
+function getNewsList(){
+    var url = newslist();
     sendWebRequest(url,loadNewsList,"GET","");
 }
 function loadNewsList(oritxt){
@@ -81,7 +80,6 @@ function loadNewsList(oritxt){
             }
             newsListPage.listmodel.append(obj.newslist[i]);
         }
-        newsListPage.listView.scrollToTop();
     }
     else signalcenter.showMessage(obj.error);
 }
@@ -99,6 +97,10 @@ function getNewsDetail(newsid){
     newsDetailPage.xmlModel.source = url;
 }
 
+
+function getSlideUrl(){
+    return getSlide()
+}
 
 
 function humanedate(utcDateStr){
