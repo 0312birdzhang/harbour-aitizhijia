@@ -15,7 +15,7 @@ function sendWebRequest(url, callback, method, postdata) {
                     callback(xmlhttp.responseText);
                     signalcenter.loadFinished();
                 } catch(e) {
-                    console.log(e)
+                    console.log(e.toString())
                     signalcenter.loadFailed(qsTr("loading erro..."));
                 }
             } else {
@@ -97,10 +97,39 @@ function getNewsDetail(newsid){
     newsDetailPage.xmlModel.source = url;
 }
 
+function getRelated(newsid){
+    var url = getRelatedUrl(newsid);
+    console.log("related url:"+url)
+    sendWebRequest(url,loadRelatedNewsList,"GET","");
+}
+
+function loadRelatedNewsList(oritxt){
+    if(oritxt.indexOf("[") !== 0){
+        oritxt = oritxt.substring(oritxt.indexOf("["))
+    }
+    var obj = JSON.parse(oritxt);
+    if(obj){
+        newsDetailPage.relatedmodel.clear();
+        for(var i in obj){
+            newsDetailPage.relatedmodel.append({
+                   "newsid": obj[i].newsid,
+                   "title": obj[i].newstitle,
+                   "image": obj[i].img,
+                   "postdate": obj[i].postdate,
+                   "commentcount":""
+               });
+        }
+    }
+    else signalcenter.showMessage(obj.error);
+}
+
 
 function getSlideUrl(){
     return getSlide()
 }
+
+
+
 
 
 function humanedate(utcDateStr){

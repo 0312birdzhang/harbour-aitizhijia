@@ -17,6 +17,10 @@ function newslist(){
    return getApiBase() + "json/newslist/news?r=0";
 }
 
+function getRelatedUrl(newsid){
+    return getApiBase() + "json/tags/0"+ newsid.toString().slice(0,3) +"/"+newsid.toString()+".json"
+}
+
 function loadMore(newsid){
     var prevNewsid = getLoadMoreId(newsid);
     return getApiBase() + "xml/newslist/news_"+ prevNewsid +".xml"

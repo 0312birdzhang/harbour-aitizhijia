@@ -3,8 +3,33 @@ import Sailfish.Silica 1.0
 
 BackgroundItem{
     id:showlist
-    height:titleid.height+timeid.height+summaryid.height+Theme.paddingMedium*4
+    height: newsImage.height + Theme.paddingLarge * 2
     width: parent.width
+
+
+    function fmtTime(postdate) {
+        if(postdate.indexOf("T")){
+            postdate = postdate.replace("T"," ");
+        }
+        var month = parseInt(postdate.split("-")[1]);
+        if( month < 10){
+            postdate = postdate.replace("-"+month+"-", "-0"+month+"-");
+        }
+        var txt = Format.formatDate(new Date(postdate), Formatter.Timepoint)
+        var elapsed = Format.formatDate(new Date(postdate), Formatter.DurationElapsed)
+        return elapsed ? elapsed : txt
+    }
+
+    Image{
+        id: newsImage
+        source: image
+        anchors{
+            left: parent.left
+            top: parent.top
+            margins: Theme.paddingMedium
+        }
+    }
+
     Label{
         id:titleid
         text:title
@@ -15,7 +40,7 @@ BackgroundItem{
         font.bold:true;
         anchors {
             top:parent.top;
-            left: parent.left
+            left: newsImage.right
             right: parent.right
             topMargin: Theme.paddingMedium
             leftMargin: Theme.paddingMedium
@@ -23,51 +48,34 @@ BackgroundItem{
         }
     }
 
-    Label{
-        id:summaryid
-        text: description
-        textFormat: Text.StyledText
-        font.pixelSize: Theme.fontSizeExtraSmall
-        wrapMode: Text.WordWrap
-        linkColor:Theme.primaryColor
-        maximumLineCount: 6
-        anchors {
-            top: titleid.bottom
-            left: parent.left
-            right: parent.right
-            topMargin: Theme.paddingMedium
-            leftMargin: Theme.paddingMedium
-            rightMargin: Theme.paddingMedium
-        }
-    }
     Label{
         id:timeid
 
-        text: "发布时间 : " +  fmtTime(postdate) //JS.humanedate(postdate)
+        text: "发布时间 : " +  fmtTime(postdate)
         //opacity: 0.7
         font.pixelSize: Theme.fontSizeTiny
         //font.italic: true
         color: Theme.secondaryColor
         //horizontalAlignment: Text.AlignRight
         anchors {
-            top:summaryid.bottom
-            left: parent.left
-            topMargin: Theme.paddingMedium
+            bottom: parent.bottom
+            left: newsImage.right
+            bottomMargin: Theme.paddingMedium
             leftMargin: Theme.paddingMedium
         }
     }
     Label{
         id:viewcount
-        text:"评论 : "+commentcount+" / 浏览 : "+hitcount
+        text: commentcount? ("评论 : "+commentcount+" / 浏览 : "+hitcount):""
         //opacity: 0.7
         font.pixelSize: Theme.fontSizeTiny
         //font.italic: true
         color: Theme.secondaryColor
         //horizontalAlignment: Text.AlignRight
         anchors {
-            top:summaryid.bottom
+            bottom: parent.bottom
             right: parent.right
-            topMargin: Theme.paddingMedium
+            bottomMargin: Theme.paddingMedium
             rightMargin: Theme.paddingMedium
         }
     }

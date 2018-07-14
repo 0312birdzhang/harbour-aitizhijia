@@ -1,12 +1,19 @@
 import QtQuick 2.0
 import QtQuick.XmlListModel 2.0
 import Sailfish.Silica 1.0
+
+import "../components"
 import "../js/main.js" as JS
 
 Page {
     id: detailpage
     property string newstitle
     property int newsid
+    property alias relatedmodel: relatedmodel
+
+    ListModel{
+        id: relatedmodel
+    }
 
     XmlListModel {
         id: xmlModel
@@ -85,5 +92,45 @@ Page {
             }
 
         }
+
+        footer: Component{
+            Item {
+                anchors {
+                    left: parent.left;
+                    right: parent.right;
+                }
+                height: relatedCol.height
+                width: parent.width
+                Column{
+                    id: relatedCol
+                    width: parent.width
+                    Item{
+                        width: 1;
+                        height: Theme.itemSizeMedium
+                    }
+
+                    Label {
+                        text: "相关文章"
+                        color: Theme.highlightColor
+                        font.pixelSize: Theme.fontSizeMedium
+                        anchors{
+                            right: parent.right
+                            margins: Theme.paddingLarge
+                        }
+                    }
+                    Repeater{
+                        model: relatedmodel
+                        delegate: NewsListComponents{
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Component.onCompleted: {
+        JS.signalcenter = signalCenter;
+        JS.newsDetailPage = detailpage;
+        JS.getRelated(newsid)
     }
 }

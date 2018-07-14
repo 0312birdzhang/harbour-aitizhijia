@@ -63,18 +63,6 @@ Page {
 
     }
 
-    function fmtTime(postdate) {
-        if(postdate.indexOf("T")){
-            postdate = postdate.replace("T"," ");
-        }
-        var month = parseInt(postdate.split("-")[1]);
-        if( month < 10){
-            postdate = postdate.replace("-"+month+"-", "-0"+month+"-");
-        }
-        var txt = Format.formatDate(new Date(postdate), Formatter.Timepoint)
-        var elapsed = Format.formatDate(new Date(postdate), Formatter.DurationElapsed)
-        return elapsed ? elapsed : txt
-    }
 
     function loadMore(newsid){
         var url = JS.getMoreNews(newsid);
@@ -121,6 +109,7 @@ Page {
                     right: parent.right;
                 }
                 height: Theme.itemSizeMedium
+                visible: !loading
                 Row {
                     id:footItem
                     spacing: Theme.paddingLarge
