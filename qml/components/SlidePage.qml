@@ -19,7 +19,7 @@ Item{
         id: banner;
         anchors.top: pageHeader.bottom
         width: parent.width;
-        height: isLandscape?Screen.height/5.5:Screen.height/4
+        height: isLandscape?Screen.height/5.5:Screen.height/5
         preferredHighlightBegin: 0.5;
         preferredHighlightEnd: 0.5;
         path: Path {
@@ -40,7 +40,6 @@ Item{
                 anchors{
                     left: parent.left
                     right: parent.right
-                    margins: Theme.paddingMedium
                 }
                 source: image
                 width: parent.width
@@ -70,30 +69,26 @@ Item{
             onTriggered: banner.incrementCurrentIndex();
         }
     }
-    Rectangle{
-        z:8
-        anchors.top:banner.bottom
-        //            opacity: view.contentY/banner.height > 1 ? 0 : 1-view.contentY/banner.height;
-        //            visible: opacity>0.0;
-        width: parent.width;
-        height: isLandscape?Screen.height/10:Screen.height/4/2
-        gradient: Gradient {
-            GradientStop { position: 0; color: "#08202c" }
-            GradientStop { position: 1.0; color: "#00000000" }
-        }
-    }
+//    Rectangle{
+//        z:8
+//        anchors.top:banner.bottom
+//        width: parent.width;
+//        height: isLandscape?Screen.height/10:Screen.height/4/2
+//        gradient: Gradient {
+//            GradientStop { position: 0; color: "#08202c" }
+//            GradientStop { position: 1.0; color: "#00000000" }
+//        }
+//    }
     Row{
         z:11
         anchors.left: parent.left;
         anchors.bottom: banner.bottom
-        //            opacity: view.contentY/banner.height > 1 ? 0 : 1-view.contentY/banner.height;
-        //            visible: opacity>0.0;
         Repeater{
             model: banner.count
             Rectangle{
                 width:  isLandscape?Screen.width/banner.count*2:Screen.width/banner.count
                 height: Theme.paddingSmall
-                color: banner.currentIndex==index?"#22ffffff":"#44000000"
+                color: banner.currentIndex==index?Theme.secondaryColor:"#44000000"
                 MouseArea {
                     anchors.fill: parent;
                     onClicked: {

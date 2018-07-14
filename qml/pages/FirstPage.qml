@@ -17,16 +17,11 @@ Page {
     XmlListModel {
         id: slideModel
         source: JS.getSlideUrl()
-        query: "/rss/channel/item"
+        query: "/rss/channel/item[contains(lower-case(child::opentype),'1')]"
         XmlRole { name: "newsid"; query: "link/number()" }
         XmlRole { name: "title"; query: "title/string()" }
         XmlRole { name: "image"; query: "image/string()" }
-//        onStatusChanged: {
-//            if(status == XmlListModel.Ready){
-
-//                slidePage.model = slideModel
-//            }
-//        }
+        XmlRole { name: "opentype"; query: "opentype/string()" }
     }
 
 
