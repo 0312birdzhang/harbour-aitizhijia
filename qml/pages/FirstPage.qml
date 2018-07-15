@@ -8,6 +8,7 @@ Page {
     id: newspage
     property alias listmodel: listmodel
     property alias listView: listView
+    property int latestNewsid:0
     allowedOrientations: Orientation.All
 
     ListModel{
@@ -29,19 +30,25 @@ Page {
         id: xmlModel
         query: "/rss/channel/item"
         XmlRole { name: "newsid"; query: "newsid/number()" }
+        XmlRole { name: "image"; query: "image/string()" }
         XmlRole { name: "title"; query: "title/string()" }
         XmlRole { name: "postdate"; query: "postdate/string()" }
         XmlRole { name: "description"; query: "description/string()" }
         XmlRole { name: "hitcount"; query: "hitcount/number()" }
         XmlRole { name: "commentcount"; query: "commentcount/number()" }
+        XmlRole { name: "lapinid"; query: "lapinid/number()" }
         onStatusChanged: {
             switch(status){
             case XmlListModel.Ready:
                 signalCenter.loadFinished();
                 for (var i=0; i<count; i++) {
                     var item = get(i);
+                    if(item.lapinid){
+                        continue;
+                    }
                     listmodel.append({newsid: item.newsid,
                                         title: item.title,
+                                        image: item.image,
                                         postdate: item.postdate,
                                         description: item.description,
                                         hitcount: item.hitcount,
@@ -76,21 +83,11 @@ Page {
     SilicaListView{
         id: listView
         anchors.fill: parent
-//        anchors {
-//            top: parent.top
-//            left: parent.left
-//            right: parent.right
-//        }
         width: parent.width
         clip: true
         header: SlidePage{
             model: slideModel
         }
-
-
-
-
-
         PullDownMenu {
             MenuItem {
                 text: "刷新"

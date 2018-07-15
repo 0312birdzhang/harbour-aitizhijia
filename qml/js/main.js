@@ -69,17 +69,20 @@ function getNewsList(){
     var url = newslist();
     sendWebRequest(url,loadNewsList,"GET","");
 }
+
 function loadNewsList(oritxt){
     var obj = JSON.parse(oritxt);
     if(obj){
-        newsListPage.listmodel.clear();
-        for(var i in obj.newslist){
-            // drop ads
-            if(obj.newslist[i].lapinid){
-                continue;
+        if(obj.newslist[0].newsid > newsListPage.latestNewsid){
+            for(var i in obj.newslist){
+                // drop ads
+                if(obj.newslist[i].lapinid){
+                    continue;
+                }
+                newsListPage.listmodel.insert(0,obj.newslist[obj.newslist.length-i]);
             }
-            newsListPage.listmodel.append(obj.newslist[i]);
         }
+        newsListPage.latestNewsid = obj.newslist[0].newsid
     }
     else signalcenter.showMessage(obj.error);
 }
@@ -111,13 +114,15 @@ function loadRelatedNewsList(oritxt){
     if(obj){
         newsDetailPage.relatedmodel.clear();
         for(var i in obj){
-            newsDetailPage.relatedmodel.append({
+//            if(i < 3){
+                newsDetailPage.relatedmodel.append({
                    "newsid": obj[i].newsid,
                    "title": obj[i].newstitle,
                    "image": obj[i].img,
                    "postdate": obj[i].postdate,
                    "commentcount":""
                });
+//            }
         }
     }
     else signalcenter.showMessage(obj.error);

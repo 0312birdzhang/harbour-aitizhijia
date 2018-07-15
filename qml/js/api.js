@@ -23,6 +23,7 @@ function getRelatedUrl(newsid){
 
 function loadMore(newsid){
     var prevNewsid = getLoadMoreId(newsid);
+    console.log("crypted id:"+prevNewsid)
     return getApiBase() + "xml/newslist/news_"+ prevNewsid +".xml"
 }
 

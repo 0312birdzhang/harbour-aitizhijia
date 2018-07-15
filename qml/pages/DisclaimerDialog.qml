@@ -17,8 +17,8 @@ Dialog {
             }
 
             Label {
-                property string disclaimertext: "本软件接口来自网络，对于本软件的内容真实性本人不负责，"+
-                                                "对于在使用过程中对您造成的影响本人不负责，禁止发布含违法法律、行政法规的内容等。"+
+                property string disclaimertext: "本软件接口来自网络，对于本软件的内容真实性与否本人不负责，"+
+                                                "对于在使用过程中对您造成的影响本人不负责。禁止发布含违法法律、行政法规的内容等。"+
                                                 "本软件承诺不收集您的隐私信息，你使用本软件即视为你已阅读并同意受本协议的约束。"
 
                 anchors.horizontalCenter: parent.horizontalCenter

@@ -109,21 +109,33 @@ Page {
                         height: Theme.itemSizeMedium
                     }
 
-                    Label {
-                        text: "相关文章"
-                        color: Theme.highlightColor
-                        font.pixelSize: Theme.fontSizeMedium
-                        anchors{
-                            right: parent.right
-                            margins: Theme.paddingLarge
-                        }
-                    }
-                    Repeater{
-                        model: relatedmodel
-                        delegate: NewsListComponents{
+//                    Label {
+//                        text: "相关文章"
+//                        color: Theme.highlightColor
+//                        font.pixelSize: Theme.fontSizeMedium
+//                        anchors{
+//                            right: parent.right
+//                            margins: Theme.paddingLarge
+//                        }
+//                    }
+                    ExpandingSectionGroup {
+                        currentIndex: -1
+                        ExpandingSection {
+                            id: section
+                            title: "相关文章"
+                            content.sourceComponent: Column {
+                                width: section.width
+                                Repeater{
+                                    model: relatedmodel
+                                    delegate: NewsListComponents{
 
+                                    }
+                                }
+                            }
                         }
+
                     }
+
                 }
             }
         }
