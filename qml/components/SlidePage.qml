@@ -2,17 +2,16 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 Item{
-    property alias model:banner.model
-    property alias topmodel: toplistview.model
+    property alias bannermodel : banner.model
     width: parent.width
-    height: banner.height + pageHeader.height
+    height: banner.height + pageHeader.height //+ toplistview.height
     anchors{
         left:parent.left
         right:parent.right
     }
     PageHeader{
         id: pageHeader
-        title: "挨踢之家"
+        title: appwindow.appname
         anchors.right: parent.right
     }
     PathView {
@@ -91,12 +90,5 @@ Item{
         }
     }
 
-    TopListView{
-        id: toplistview
-        anchors{
-            top: switchRow.bottom
-            left: parent.left
-            right: parent.right
-        }
-    }
+
 }

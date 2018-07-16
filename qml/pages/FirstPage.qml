@@ -7,16 +7,12 @@ import "../js/main.js" as JS
 Page {
     id: newspage
     property alias listmodel: listmodel
-    property alias topmodel: topmodel
     property alias listView: listView
     property int latestNewsid:0
     allowedOrientations: Orientation.All
 
     ListModel{
         id: listmodel
-    }
-    ListModel{
-        id: topmodel
     }
 
     XmlListModel {
@@ -41,6 +37,7 @@ Page {
         XmlRole { name: "hitcount"; query: "hitcount/number()" }
         XmlRole { name: "commentcount"; query: "commentcount/number()" }
         XmlRole { name: "lapinid"; query: "lapinid/number()" }
+        XmlRole { name: "topplat"; query: "topplat/string()" }
         onStatusChanged: {
             switch(status){
             case XmlListModel.Ready:
@@ -90,8 +87,7 @@ Page {
         width: parent.width
         clip: true
         header: SlidePage{
-            model: slideModel
-            topmodel: topmodel
+            bannermodel: slideModel
         }
         PullDownMenu {
             MenuItem {
@@ -111,7 +107,7 @@ Page {
                     right: parent.right;
                 }
                 height: Theme.itemSizeMedium
-                visible: !loading
+                visible: !loading && listmodel.count > 0
                 Row {
                     id:footItem
                     spacing: Theme.paddingLarge
@@ -144,11 +140,9 @@ Page {
 
     }
 
-
     Component.onCompleted: {
         JS.signalcenter = signalCenter
         JS.newsListPage = newspage;
-        JS.getTopList();
         JS.getNewsList();
     }
 }

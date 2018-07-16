@@ -50,13 +50,9 @@ BackgroundItem{
 
     Label{
         id:timeid
-
-        text: "发布时间 : " +  fmtTime(postdate)
-        //opacity: 0.7
+        text: topplat ? "置顶" : "发布时间 : " +  fmtTime(postdate)
         font.pixelSize: Theme.fontSizeTiny
-        //font.italic: true
-        color: Theme.secondaryColor
-        //horizontalAlignment: Text.AlignRight
+        color: topplat ? Theme.highlightColor : Theme.secondaryColor
         anchors {
             bottom: parent.bottom
             left: newsImage.right

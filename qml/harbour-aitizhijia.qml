@@ -11,6 +11,7 @@ ApplicationWindow
 {
     id: appwindow
     property bool loading: false
+    property string appname: "挨踢之家"
     initialPage: config.accepted ? firstpage : discclaimer
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: defaultAllowedOrientations
