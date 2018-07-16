@@ -87,6 +87,24 @@ function loadNewsList(oritxt){
     else signalcenter.showMessage(obj.error);
 }
 
+function getTopList(){
+    var url = newslist();
+    sendWebRequest(url,loadTopList,"GET","");
+}
+
+function loadTopList(oritxt){
+    var obj = JSON.parse(oritxt);
+    if(obj){
+        for(var i in obj.toplist){
+            // drop ads
+            if(obj.toplist[i].lapinid){
+                continue;
+            }
+            newsListPage.topmodel.insert(0,obj.toplist[obj.toplist.length-i]);
+        }
+    }
+    }
+}
 
 function getMoreNews(newsid){
     return loadMore(newsid)

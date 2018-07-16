@@ -3,6 +3,7 @@ import Sailfish.Silica 1.0
 
 Item{
     property alias model:banner.model
+    property alias topmodel: toplistview.model
     width: parent.width
     height: banner.height + pageHeader.height
     anchors{
@@ -69,17 +70,8 @@ Item{
             onTriggered: banner.incrementCurrentIndex();
         }
     }
-//    Rectangle{
-//        z:8
-//        anchors.top:banner.bottom
-//        width: parent.width;
-//        height: isLandscape?Screen.height/10:Screen.height/4/2
-//        gradient: Gradient {
-//            GradientStop { position: 0; color: "#08202c" }
-//            GradientStop { position: 1.0; color: "#00000000" }
-//        }
-//    }
     Row{
+        id: switchRow
         z:11
         anchors.left: parent.left;
         anchors.bottom: banner.bottom
@@ -96,6 +88,15 @@ Item{
                     }
                 }
             }
+        }
+    }
+
+    TopListView{
+        id: toplistview
+        anchors{
+            top: switchRow.bottom
+            left: parent.left
+            right: parent.right
         }
     }
 }

@@ -7,12 +7,16 @@ import "../js/main.js" as JS
 Page {
     id: newspage
     property alias listmodel: listmodel
+    property alias topmodel: topmodel
     property alias listView: listView
     property int latestNewsid:0
     allowedOrientations: Orientation.All
 
     ListModel{
         id: listmodel
+    }
+    ListModel{
+        id: topmodel
     }
 
     XmlListModel {
@@ -87,6 +91,7 @@ Page {
         clip: true
         header: SlidePage{
             model: slideModel
+            topmodel: topmodel
         }
         PullDownMenu {
             MenuItem {
@@ -143,6 +148,7 @@ Page {
     Component.onCompleted: {
         JS.signalcenter = signalCenter
         JS.newsListPage = newspage;
+        JS.getTopList();
         JS.getNewsList();
     }
 }
