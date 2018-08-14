@@ -116,4 +116,5 @@ function str2UTF8(str){
 圈子列表 https://apiquan.ithome.com/api/post?categoryid=0&type=0&orderTime=&visistCount&pageLength
 圈子详情 https://apiquan.ithome.com/api/post/236076
 圈子评论 https://apiquan.ithome.com/api/reply?postid=236076&replyidlessthan=3241294
+评论总数 https://dyn.ithome.com/api/comment/count?newsid=376761
 */
