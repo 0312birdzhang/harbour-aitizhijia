@@ -50,7 +50,7 @@ def parse_html(html):
         # 评论内容
         content = comment.find('p').text
         # 用户名
-        name = comment.find('span', class_='nick').get_text()
+        nickname = comment.find('span', class_='nick').get_text()
         # 发帖时间与位置
         posandtime = comment.find("span", class_="posandtime").get_text()
         position = posandtime.split("\xa0")[0]
@@ -61,7 +61,7 @@ def parse_html(html):
         phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
         floor = comment.find("strong", class_="p_floor").get_text()
         info_list.append(
-            {'name': name,
+            {'nickname': nickname,
              'content': content,
              'posttime': posttime,
              'position': position,

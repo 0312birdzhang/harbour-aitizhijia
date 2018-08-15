@@ -11,6 +11,14 @@ Page {
     property int newsid
     property alias relatedmodel: relatedmodel
 
+    onStatusChanged: {
+        if (status == PageStatus.Active) {
+            if (pageStack._currentContainer.attachedContainer == null) {
+                pageStack.pushAttached(Qt.resolvedUrl("CommentsPage.qml"))
+            }
+        }
+    }
+
     ListModel{
         id: relatedmodel
     }
