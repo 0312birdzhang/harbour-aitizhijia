@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Notifications 1.0
 import Nemo.Configuration 1.0
-
+import io.thp.pyotherside 1.3
 
 import "pages"
 import "js/main.js" as JS
@@ -89,6 +89,27 @@ ApplicationWindow
         DisclaimerDialog{
             acceptDestination: firstpage
             acceptDestinationAction: PageStackAction.Replace
+        }
+    }
+
+    Python{
+        id: py
+        Component.onCompleted: {
+           addImportPath('./py');
+           py.importModule('main', function () {
+
+           });
+        }
+
+        function getHotComments(newsid){
+            call('main.get_hot_comment',[newsid],function(result){
+                console.log(result)
+                if(result && result.length > 0){
+                    for(var i=0; i < result.length; i++){
+                        hostModel.append(result[i])
+                    }
+                }
+            });
         }
     }
 

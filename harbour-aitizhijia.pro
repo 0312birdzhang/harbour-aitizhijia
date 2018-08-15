@@ -30,6 +30,7 @@ DISTFILES += qml/harbour-aitizhijia.qml \
     qml/js/base64.js \
     qml/pages/DisclaimerDialog.qml \
     qml/components/SlidePage.qml \
+    qml/components/CommentsPage.qml \
     qml/components/NewsListComponents.qml
 
 SAILFISHAPP_ICONS = 86x86 108x108 128x128 172x172

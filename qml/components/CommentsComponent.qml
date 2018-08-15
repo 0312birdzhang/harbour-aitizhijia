@@ -5,8 +5,8 @@ import Sailfish.Silica 1.0
 BackgroundItem{
     id:showcomments
     height:((userPic.height + nick.height)>
-                (phoneModel.height+ messageid.height + numbers.height)?
-                 (userPic.height + nick.height):(phoneModel.height+ messageid.height + numbers.height))
+                (phoneModel.height+ messageid.height)?
+                 (userPic.height + nick.height):(phoneModel.height+ messageid.height))
                 + Theme.paddingMedium * 4
     contentHeight: height
     width: parent.width
@@ -39,7 +39,7 @@ BackgroundItem{
         height:width
         fillMode: Image.PreserveAspectFit;
         Image{
-            url: avatar
+            source: avatar
             anchors.fill: parent
             width: parent.width
             height: parent.height

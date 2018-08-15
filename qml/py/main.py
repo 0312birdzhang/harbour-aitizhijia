@@ -1,12 +1,10 @@
-#!/usr/bin/env python3
-
 from bs4 import BeautifulSoup
 import requests
 import json
 
-def parse_hot_comment(newsid):
+def get_hot_comment(newsid):
     data = {
-        'newsID': newsid,
+        'newsID': int(newsid),
         "pid" : 1,
         'type': 'hotcomment'
     }
@@ -14,19 +12,22 @@ def parse_hot_comment(newsid):
         r = requests.post(
             'https://dyn.ithome.com/ithome/getajaxdata.aspx', data=data)
         result = r.text
+        print("1111")
         html = json.loads(result).get("html")
+        print("1111")
         if not html:
             return []
-        html = html.replace("\u003c","<")
-        html = html.replace("\u003e",">")
+        #html = html.replace("\u003c","<")
+        #html = html.replace("\u003e",">")
+        print("1111")
         return parse_html(html)
     except Exception as e:
         print(str(e))
-        return None
+        return list()
 
-def parse_comment_page(newsid):
+def get_comment_page(newsid):
     data = {
-        'newsID': newsid,
+        'newsID': int(newsid),
         "page": 1,
         "hash": getHashId(newsid),
         'type': 'commentpage',
@@ -38,8 +39,7 @@ def parse_comment_page(newsid):
         html = r.text
         return parse_html(html)
     except Exception as e:
-        print(str(e))
-        return None
+        return list()
 
 
 def parse_html(html):
@@ -47,19 +47,15 @@ def parse_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     comment_list = soup.find_all('li', class_='entry')
     for comment in comment_list:
-        # 评论内容
         content = comment.find('p').text
-        # 用户名
         nickname = comment.find('span', class_='nick').get_text()
-        # 发帖时间与位置
         posandtime = comment.find("span", class_="posandtime").get_text()
         position = posandtime.split("\xa0")[0]
         posttime = posandtime.split("\xa0")[1]
-        # 头像
-        avatar = "https:" + comment.find("img", class_="headerimage")["src"]
-        # 其他信息
+        avatar = "https:%s" % ( comment.find("img", class_="headerimage")["src"],)
         phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
         floor = comment.find("strong", class_="p_floor").get_text()
+        print("33333")
         info_list.append(
             {'nickname': nickname,
              'content': content,
@@ -72,7 +68,7 @@ def parse_html(html):
         return info_list
 
 def getHashId(newsid):
-    url = "https://dyn.ithome.com/comment/" + newsid
+    url = "https://dyn.ithome.com/comment/%s" % (newsid,)
     try:
         r = requests.get(url)
         html = r.text
@@ -80,11 +76,11 @@ def getHashId(newsid):
         hashid = soup.find("input", {"id":"hash"}).get('value')
         return hashid
     except Exception as e:
-        print(str(e))
-    return None
+        pass
+    return 0
 
 def getTotalComment(newsid):
-    url = "https://dyn.ithome.com/api/comment/count?newsid=" + newsid
+    url = "https://dyn.ithome.com/api/comment/count?newsid=%s" % (newsid,)
     try:
         r = requests.get(url)
         html = r.text
@@ -92,8 +88,5 @@ def getTotalComment(newsid):
         total = html.split("innerHTML")[1].replace("=","").replace("'","").replace(";","")
         return int(total)
     except Exception as e:
-        print(str(e))
-    return None
-
-if __name__ == "__main__":
-    print(parse_comment_page("376751"))
+        pass
+    return 0
