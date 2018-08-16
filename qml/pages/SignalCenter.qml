@@ -8,4 +8,7 @@ QtObject{
     signal loginSuccessed;
     signal loginFailed(string fail);
 
+    signal getHotComment(var result);
+    signal getCommentsNum(int result);
+    signal getCommentPage(var result);
 }

@@ -1,34 +1,36 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from bs4 import BeautifulSoup
 import requests
 import json
 
 def get_hot_comment(newsid):
     data = {
-        'newsID': int(newsid),
+        'newsID': str(newsid),
         "pid" : 1,
         'type': 'hotcomment'
     }
     try:
-        r = requests.post(
-            'https://dyn.ithome.com/ithome/getajaxdata.aspx', data=data)
+        r = requests.request(
+            "POST", "https://dyn.ithome.com/ithome/getajaxdata.aspx",
+             data=data, timeout = 10
+        )
         result = r.text
-        print("1111")
         html = json.loads(result).get("html")
-        print("1111")
         if not html:
             return []
         #html = html.replace("\u003c","<")
         #html = html.replace("\u003e",">")
-        print("1111")
         return parse_html(html)
     except Exception as e:
         print(str(e))
         return list()
 
-def get_comment_page(newsid):
+def get_comment_page(newsid,pagenum):
     data = {
-        'newsID': int(newsid),
-        "page": 1,
+        'newsID': str(newsid),
+        "page": int(pagenum),
         "hash": getHashId(newsid),
         'type': 'commentpage',
         'order': False
@@ -39,6 +41,7 @@ def get_comment_page(newsid):
         html = r.text
         return parse_html(html)
     except Exception as e:
+        print(str(e))
         return list()
 
 
@@ -55,7 +58,6 @@ def parse_html(html):
         avatar = "https:%s" % ( comment.find("img", class_="headerimage")["src"],)
         phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
         floor = comment.find("strong", class_="p_floor").get_text()
-        print("33333")
         info_list.append(
             {'nickname': nickname,
              'content': content,
@@ -79,7 +81,7 @@ def getHashId(newsid):
         pass
     return 0
 
-def getTotalComment(newsid):
+def getCommentsNum(newsid):
     url = "https://dyn.ithome.com/api/comment/count?newsid=%s" % (newsid,)
     try:
         r = requests.get(url)
@@ -90,3 +92,6 @@ def getTotalComment(newsid):
     except Exception as e:
         pass
     return 0
+
+if __name__ == "__main__":
+    get_hot_comment("376751")

@@ -3,7 +3,6 @@ import Sailfish.Silica 1.0
 
 
 BackgroundItem{
-    id:showcomments
     height:((userPic.height + nick.height)>
                 (phoneModel.height+ messageid.height)?
                  (userPic.height + nick.height):(phoneModel.height+ messageid.height))

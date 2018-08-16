@@ -97,32 +97,13 @@ Page {
         }
         model: listmodel
         delegate: NewsListComponents{}
-
-        footer: Component{
-
-            Item {
-                id: loadMoreID
-                anchors {
-                    left: parent.left;
-                    right: parent.right;
-                }
-                height: Theme.itemSizeMedium
-                visible: !loading && listmodel.count > 0
-                Row {
-                    id:footItem
-                    spacing: Theme.paddingLarge
-                    anchors.horizontalCenter: parent.horizontalCenter
-                   
-                    Button{
-                        text: "加载更多..."
-                        onClicked: {
-                            var newsid = listmodel.get(listmodel.count-1).newsid;
-                            loadMore(newsid)
-                        }
-                    }
+        onDraggingChanged: {
+            if (!dragging && !loading) {
+                if (atYEnd) {
+                    var newsid = listmodel.get(listmodel.count-1).newsid;
+                    loadMore(newsid)
                 }
             }
-
         }
 
         VerticalScrollDecorator {flickable: listView}

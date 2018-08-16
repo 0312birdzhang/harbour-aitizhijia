@@ -95,20 +95,35 @@ ApplicationWindow
     Python{
         id: py
         Component.onCompleted: {
-           addImportPath('./py');
+           addImportPath(Qt.resolvedUrl('./py/'));
            py.importModule('main', function () {
 
            });
         }
 
         function getHotComments(newsid){
+            loading = true;
             call('main.get_hot_comment',[newsid],function(result){
-                console.log(result)
-                if(result && result.length > 0){
-                    for(var i=0; i < result.length; i++){
-                        hostModel.append(result[i])
-                    }
-                }
+                console.log(result);
+                loading = false;
+                signalCenter.getHotComment(result);
+            });
+        }
+
+        function getAllComments(newsid, pageNum){
+            loading = true;
+            call('main.get_comment_page',[newsid,pageNum],function(result){
+                console.log(result);
+                loading = false;
+                signalCenter.getCommentPage(result);
+            });
+        }
+
+        function getCommentsNum(newsid){
+            loading = true;
+            call('main.getCommentsNum',[newsid],function(result){
+                loading = false;
+                signalCenter.getCommentsNum(result);
             });
         }
     }
