@@ -6,6 +6,7 @@ import "../components"
 Page{
     id: commentsPage
     property int newsid
+    property int total: 1
     property int pagenum: 1
 
     ListModel{
@@ -34,7 +35,8 @@ Page{
         }
         onGetCommentsNum:{
             if(result > 0){
-                pagenum = Math.ceil(result/30);
+                total = result;
+                pagenum = Math.ceil(result/commentModel.count);
             }
         }
 
@@ -86,7 +88,8 @@ Page{
 
         onDraggingChanged: {
             if (!dragging && !loading) {
-                if (atYEnd && pagenum > 1) {
+                if (atYEnd && pagenum > 1 && commentModel.count < total) {
+                    pagenum+=1;
                     py.getAllComments(newsid,pagenum);
                 }
             }
