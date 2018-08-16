@@ -83,7 +83,7 @@ BackgroundItem{
     }
     onClicked: {
         pageStack.push(Qt.resolvedUrl("../pages/NewsDetail.qml"),{
-                           "newsid":newsid,
+                           "newsid": newsid,
                            "newstitle":title
                        });
     }

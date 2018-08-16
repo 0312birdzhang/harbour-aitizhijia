@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Notifications 1.0
 import Nemo.Configuration 1.0
-import io.thp.pyotherside 1.3
+import io.thp.pyotherside 1.5
 
 import "pages"
 import "js/main.js" as JS
@@ -113,7 +113,6 @@ ApplicationWindow
         function getAllComments(newsid, pageNum){
             loading = true;
             call('main.get_comment_page',[newsid,pageNum],function(result){
-                console.log(result);
                 loading = false;
                 signalCenter.getCommentPage(result);
             });

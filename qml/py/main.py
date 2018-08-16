@@ -1,9 +1,17 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 from bs4 import BeautifulSoup
 import requests
 import json
+import sys
+import logging
+
+
+logger = logging.getLogger("aitizhijia")
+formatter = logging.Formatter("%(asctime)s %(pathname)s %(filename)s %(funcName)s %(lineno)s \
+%(levelname)s - %(message)s", "%Y-%m-%d %H:%M:%S")
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.formatter = formatter
+logger.addHandler(console_handler)
+logger.setLevel(logging.DEBUG)
 
 def get_hot_comment(newsid):
     data = {
@@ -12,19 +20,23 @@ def get_hot_comment(newsid):
         'type': 'hotcomment'
     }
     try:
-        r = requests.request(
-            "POST", "https://dyn.ithome.com/ithome/getajaxdata.aspx",
-             data=data, timeout = 10
+        r = requests.post(
+            "https://dyn.ithome.com/ithome/getajaxdata.aspx",
+             data=data
         )
         result = r.text
+        if not result:
+            return list()
+        logger.debug("===========1===========")
         html = json.loads(result).get("html")
+        logger.debug("===========2===========")
         if not html:
-            return []
-        #html = html.replace("\u003c","<")
-        #html = html.replace("\u003e",">")
+            return list()
+        html = html.replace("\u003c","<")
+        html = html.replace("\u003e",">")
         return parse_html(html)
     except Exception as e:
-        print(str(e))
+        logger.error(str(e))
         return list()
 
 def get_comment_page(newsid,pagenum):
@@ -41,7 +53,7 @@ def get_comment_page(newsid,pagenum):
         html = r.text
         return parse_html(html)
     except Exception as e:
-        print(str(e))
+        logger.error(str(e))
         return list()
 
 
@@ -67,31 +79,55 @@ def parse_html(html):
              'avatar': avatar,
              'floor': floor
              })
-        return info_list
+    return info_list
+
 
 def getHashId(newsid):
     url = "https://dyn.ithome.com/comment/%s" % (newsid,)
     try:
-        r = requests.get(url)
-        html = r.text
-        soup = BeautifulSoup(html, 'html.parser')
-        hashid = soup.find("input", {"id":"hash"}).get('value')
-        return hashid
+        html = get(url)
+#        logger.debug("hash html",html)
+        soup = BeautifulSoup(html, "html.parser")
+        hashsoup = soup.find("input", attrs={"id":"hash"})
+        if hashsoup:
+            hashid = hashsoup.get("value")
+            return hashid
     except Exception as e:
-        pass
-    return 0
+        logger.error(str(e))
+    return ""
 
 def getCommentsNum(newsid):
-    url = "https://dyn.ithome.com/api/comment/count?newsid=%s" % (newsid,)
+    url = "https://dyn.ithome.com/api/comment/count?newsid=%s" % (str(newsid),)
+    logger.debug(url)
     try:
-        r = requests.get(url)
-        html = r.text
+        html = get(url)
+        logger.debug(str(html))
         # if(document.getElementById('commentcount')!=null)  document.getElementById('commentcount').innerHTML = '34';
         total = html.split("innerHTML")[1].replace("=","").replace("'","").replace(";","")
         return int(total)
     except Exception as e:
-        pass
+        logger.error(str(e))
     return 0
 
+def get(url):
+    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'}
+    try:
+        r = requests.get(url, headers=headers)
+        return r.text
+    except Exception as e:
+        logger.error(str(e))
+    return None
+
+
+def post(url, data):
+    headers = {'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Safari/537.36'}
+    try:
+        r = requests.post(url, headers=headers, data = data)
+        return r.text
+    except Exception as e:
+        logger.error(str(e))
+    return None
+
+
 if __name__ == "__main__":
-    get_hot_comment("376751")
+    print(getCommentsNum("376751"))

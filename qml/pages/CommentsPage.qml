@@ -5,7 +5,7 @@ import "../components"
 
 Page{
     id: commentsPage
-    property string newsid
+    property int newsid
     property int pagenum: 1
 
     ListModel{
@@ -43,7 +43,7 @@ Page{
     SilicaFlickable{
         id: flickable
         anchors.fill: parent
-        contentHeight: column.height
+        contentHeight: column.height + allColumn.height
         Column{
             id: column
             spacing: Theme.paddingLarge
@@ -58,7 +58,10 @@ Page{
 
                 }
             }
+         }
 
+        Column{
+            id: allColumn
             SectionHeader{
                 text: "全部评论"
                 visible: commentModel.count > 0
@@ -67,6 +70,7 @@ Page{
             SilicaListView{
                 id: view
                 width: parent.width
+                anchors.fill: parent
                 model: commentModel
                 delegate: CommentsComponent{
 
@@ -93,7 +97,7 @@ Page{
 
     Component.onCompleted: {
         py.getHotComments(newsid);
-        py.getAllComments(newsid,pagenum);
+        py.getAllComments(newsid,1);
         py.getCommentsNum(newsid);
     }
 }
