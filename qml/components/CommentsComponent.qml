@@ -12,10 +12,22 @@ BackgroundItem{
     anchors.leftMargin: Theme.paddingSmall
     anchors.rightMargin: Theme.paddingSmall
 
+    function fmtTime(postdate) {
+        if(postdate.indexOf("T")){
+            postdate = postdate.replace("T"," ");
+        }
+        var month = parseInt(postdate.split("-")[1]);
+        if( month < 10){
+            postdate = postdate.replace("-"+month+"-", "-0"+month+"-");
+        }
+        var txt = Format.formatDate(new Date(postdate), Formatter.Timepoint)
+        var elapsed = Format.formatDate(new Date(postdate), Formatter.DurationElapsed)
+        return elapsed ? elapsed : txt
+    }
 
     Label{
         id:date
-        text: posttime
+        text: fmtTime(posttime) + "  " + floor
         font.pixelSize: Theme.fontSizeExtraSmall
         font.italic: true
         horizontalAlignment: Text.AlignRight
@@ -37,8 +49,10 @@ BackgroundItem{
         width:Screen.width/6 - Theme.paddingMedium
         height:width
         fillMode: Image.PreserveAspectFit;
+        source: avatar
         Image{
-            source: avatar
+            source: "https://img.ithome.com/images/v2.1/noavatar.png"
+            visible: parent.status == Image.Error
             anchors.fill: parent
             width: parent.width
             height: parent.height

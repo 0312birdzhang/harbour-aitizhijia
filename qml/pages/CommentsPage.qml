@@ -34,66 +34,73 @@ Page{
         }
         onGetCommentsNum:{
             if(result > 0){
-                pagenum = result;
+                pagenum = Math.ceil(result/30);
             }
         }
 
     }
 
-    SilicaFlickable{
-        id: flickable
+
+    SilicaListView{
+        id: view
+        width: parent.width
         anchors.fill: parent
-        contentHeight: column.height + allColumn.height
-        Column{
-            id: column
-            spacing: Theme.paddingLarge
-            SectionHeader{
-                text: "热门评论"
-                visible: hotModel.count > 0
-                font.pixelSize: Theme.fontSizeMedium
+        clip: true
+        header: Item{
+            height: column.height
+            width: parent.width
+            anchors{
+                left:parent.left
+                right:parent.right
             }
-            Repeater{
-                model: hotModel
-                CommentsComponent{
-
-                }
-            }
-         }
-
-        Column{
-            id: allColumn
-            SectionHeader{
-                text: "全部评论"
-                visible: commentModel.count > 0
-                font.pixelSize: Theme.fontSizeMedium
-            }
-            SilicaListView{
-                id: view
+            Column{
+                id: column
                 width: parent.width
-                anchors.fill: parent
-                model: commentModel
-                delegate: CommentsComponent{
-
+                height: childrenRect.height
+                spacing: Theme.paddingLarge
+                SectionHeader{
+                    text: "热门评论"
+                    visible: hotModel.count > 0
+                    font.pixelSize: Theme.fontSizeMedium
                 }
+                SilicaListView{
+                    clip: true
+                    model: hotModel
+                    width: parent.width
+                    delegate: CommentsComponent{
 
-                onDraggingChanged: {
-                    if (!dragging && !loading) {
-                        if (atYEnd && pagenum > 1) {
-                            py.getAllComments(newsid,pagenum);
-                        }
                     }
                 }
-
-                ViewPlaceholder{
-                    enabled: view.count == 0
-                    text: "暂无评论"
-                    hintText: "稍后再来看吧"
+                SectionHeader{
+                    text: "全部评论"
+                    visible: view.count > 0
+                    font.pixelSize: Theme.fontSizeMedium
                 }
             }
+        }
 
+        model: commentModel
+        delegate: CommentsComponent{
 
         }
+
+        onDraggingChanged: {
+            if (!dragging && !loading) {
+                if (atYEnd && pagenum > 1) {
+                    py.getAllComments(newsid,pagenum);
+                }
+            }
+        }
+
+        ViewPlaceholder{
+            enabled: view.count == 0
+            text: "暂无评论"
+            hintText: "稍后再来看吧"
+        }
     }
+
+
+
 
     Component.onCompleted: {
         py.getHotComments(newsid);

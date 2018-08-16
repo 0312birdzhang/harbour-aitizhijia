@@ -27,9 +27,7 @@ def get_hot_comment(newsid):
         result = r.text
         if not result:
             return list()
-        logger.debug("===========1===========")
         html = json.loads(result).get("html")
-        logger.debug("===========2===========")
         if not html:
             return list()
         html = html.replace("\u003c","<")

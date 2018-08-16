@@ -104,7 +104,6 @@ ApplicationWindow
         function getHotComments(newsid){
             loading = true;
             call('main.get_hot_comment',[newsid],function(result){
-                console.log(result);
                 loading = false;
                 signalCenter.getHotComment(result);
             });
