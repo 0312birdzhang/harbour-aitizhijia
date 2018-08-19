@@ -35,8 +35,7 @@ Page{
         }
         onGetCommentsNum:{
             if(result > 0){
-                total = result;
-                pagenum = Math.ceil(result/commentModel.count);
+                total = Math.ceil(result/commentModel.count);
             }
         }
 
@@ -65,11 +64,11 @@ Page{
                     visible: hotModel.count > 0
                     font.pixelSize: Theme.fontSizeMedium
                 }
-                SilicaListView{
+                Repeater{
                     clip: true
                     model: hotModel
                     width: parent.width
-                    delegate: CommentsComponent{
+                    CommentsComponent{
 
                     }
                 }
@@ -88,7 +87,7 @@ Page{
 
         onDraggingChanged: {
             if (!dragging && !loading) {
-                if (atYEnd && pagenum > 1 && commentModel.count < total) {
+                if (atYEnd && pagenum > 1 && pagenum < total) {
                     pagenum+=1;
                     py.getAllComments(newsid,pagenum);
                 }
