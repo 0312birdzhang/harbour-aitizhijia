@@ -11,14 +11,6 @@ Page {
     property int newsid
     property alias relatedmodel: relatedmodel
 
-    onStatusChanged: {
-        if (status == PageStatus.Active) {
-            if (pageStack._currentContainer.attachedContainer == null) {
-                pageStack.pushAttached(Qt.resolvedUrl("CommentsPage.qml"),{"newsid":newsid})
-            }
-        }
-    }
-
     ListModel{
         id: relatedmodel
     }
@@ -53,6 +45,12 @@ Page {
         anchors.fill: parent
         width: parent.width
         model: xmlModel
+        PullDownMenu {
+            MenuItem {
+                text: "查看评论"
+                onClicked: pageStack.push(Qt.resolvedUrl("CommentsPage.qml"),{"newsid":newsid});
+            }
+        }
         header: PageHeader {
             title: newstitle
             _titleItem.font.pixelSize: Theme.fontSizeSmall

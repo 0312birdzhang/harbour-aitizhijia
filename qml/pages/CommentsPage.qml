@@ -87,8 +87,8 @@ Page{
 
         onDraggingChanged: {
             if (!dragging && !loading) {
-                if (atYEnd && pagenum > 1 && pagenum < total) {
-                    pagenum+=1;
+                if (atYEnd && pagenum > 1 && pagenum*50 < total) {
+                    pagenum = pagenum + 1;
                     py.getAllComments(newsid,pagenum);
                 }
             }
