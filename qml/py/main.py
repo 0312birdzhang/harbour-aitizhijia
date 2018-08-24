@@ -3,6 +3,7 @@ import requests
 import json
 import sys
 import logging
+import re
 
 
 logger = logging.getLogger("aitizhijia")
@@ -17,6 +18,7 @@ def get_hot_comment(newsid):
     data = {
         'newsID': str(newsid),
         "pid" : 1,
+        "hash": getHashId(newsid),
         'type': 'hotcomment'
     }
     try:
@@ -86,10 +88,14 @@ def getHashId(newsid):
         html = get(url)
 #        logger.debug("hash html",html)
         soup = BeautifulSoup(html, "html.parser")
-        hashsoup = soup.find("input", attrs={"id":"hash"})
-        if hashsoup:
-            hashid = hashsoup.get("value")
-            return hashid
+        # hashsoup = soup.find("input", attrs={"id":"hash"})
+        # if hashsoup:
+        #     hashid = hashsoup.get("value")
+        #     return hashid
+        pattern = re.compile(r"var ch11 = '(.*?)';$", re.MULTILINE | re.DOTALL)
+        script = soup.find("script", text=pattern)
+        if script:
+            return pattern.search(script.text).group(1)
     except Exception as e:
         logger.error(str(e))
     return ""
