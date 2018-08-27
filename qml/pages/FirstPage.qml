@@ -89,7 +89,12 @@ Page {
         header: SlidePage{
             bannermodel: slideModel
         }
+
         PullDownMenu {
+            MenuItem {
+                text: "关于"
+                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"));
+            }
             MenuItem {
                 text: "刷新"
                 onClicked: JS.getNewsList();

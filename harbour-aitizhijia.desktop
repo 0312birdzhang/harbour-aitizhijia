@@ -3,5 +3,5 @@ Type=Application
 X-Nemo-Application-Type=silica-qt5
 Icon=harbour-aitizhijia
 Exec=sailfish-qml harbour-aitizhijia
-Name=ITHouse
-Name[zh_CN]=挨踢之家
+Name=AiTiHome
+Name[zh_CN]=AiTi之家
