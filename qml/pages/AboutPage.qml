@@ -27,7 +27,7 @@ Page {
             }
 
             Label {
-                text:  "AiTi之家 0.1"
+                text:  appwindow.appname + " 0.1"
                 horizontalAlignment: Text.Center
                 width: parent.width - Theme.paddingLarge * 2
                 anchors.horizontalCenter: parent.horizontalCenter
@@ -39,7 +39,8 @@ Page {
 
             Label {
                 textFormat: Text.RichText;
-                text: "感谢梦梦（@旺仔狂魔）提供的图标.<br/> "
+                text: "首先感谢梦梦（@旺仔狂魔）提供的图标.<br/> "
+                       + "本软件是 www.ithome.com 的第三方实现，目前只可以查看资讯和评论。"
                 width: parent.width - Theme.paddingLarge * 2
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
