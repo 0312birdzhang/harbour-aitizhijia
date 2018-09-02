@@ -103,6 +103,7 @@ Page{
 
         ViewPlaceholder{
             enabled: commentModel.count == 0 && hotModel.count == 0
+                     && !loading && total != 1
             text: "暂无评论"
             hintText: "稍后再来看吧"
         }
