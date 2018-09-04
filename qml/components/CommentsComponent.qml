@@ -4,8 +4,8 @@ import Sailfish.Silica 1.0
 
 BackgroundItem{
     height:((userPic.height + nick.height)>
-                (phoneModel.height+ messageid.height)?
-                 (userPic.height + nick.height):(phoneModel.height+ messageid.height))
+                (phoneModel.height+ messageid.height + supply.height)?
+                 (userPic.height + nick.height):(phoneModel.height+ messageid.height + supply.height))
                 + Theme.paddingMedium * 4
     contentHeight: height
     width: parent.width
@@ -46,7 +46,7 @@ BackgroundItem{
             leftMargin: Theme.paddingSmall
             topMargin: Theme.paddingMedium
         }
-        width:Screen.width/6 - Theme.paddingMedium
+        width:Screen.width/5 - Theme.paddingMedium
         height:width
         fillMode: Image.PreserveAspectFit;
         source: avatar
@@ -64,6 +64,7 @@ BackgroundItem{
      Label{
          id:nick
          text: nickname
+         width: userPic.width
          font.pixelSize: Theme.fontSizeExtraSmall * 0.7
          horizontalAlignment: Text.AlignLeft
          truncationMode: TruncationMode.Elide
@@ -103,6 +104,22 @@ BackgroundItem{
             right:parent.right
             margins: Theme.paddingMedium
         }
+    }
+
+    Label{
+        id:supply
+        width: parent.width
+        text: agree + " " + against
+        wrapMode: Text.WordWrap
+        opacity:0.9
+        horizontalAlignment: Text.AlignRight
+        font.pixelSize: Theme.fontSizeExtraSmall
+        anchors{
+            right:parent.right
+            top:messageid.bottom
+            rightMargin: Theme.paddingMedium
+        }
+
     }
 
     //model

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 import requests
 import json
@@ -62,24 +63,48 @@ def parse_html(html):
     soup = BeautifulSoup(html, 'html.parser')
     comment_list = soup.find_all('li', class_='entry')
     for comment in comment_list:
-        content = comment.find('p').text
-        nickname = comment.find('span', class_='nick').get_text()
-        posandtime = comment.find("span", class_="posandtime").get_text()
-        position = posandtime.split("\xa0")[0]
-        posttime = posandtime.split("\xa0")[1]
-        avatar = "https:%s" % ( comment.find("img", class_="headerimage")["src"],)
-        phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
-        floor = comment.find("strong", class_="p_floor").get_text()
-        info_list.append(
-            {'nickname': nickname,
+        commentMap = parseComment(comment)
+        comments_in_floor = comment.find_all('li', class_='gh')
+        comm_infloor_list = []
+        for j in comments_in_floor:
+            comm_infloor_list.append(parseComment(j))
+        commentMap["comm_infloor_list"] = comm_infloor_list
+        info_list.append(commentMap)
+    return info_list
+
+def parseComment(comment):
+    # 评论内容
+    content = comment.find('p').text
+    # 用户名
+    name = comment.find('span', class_='nick').get_text()
+    # 发帖时间与位置
+    posandtime = comment.find("span", class_="posandtime").get_text()
+    position = posandtime.split("\xa0")[0]
+    posttime = posandtime.split("\xa0")[1]
+    # 头像
+    avatar = "https:" + comment.find("img", class_="headerimage")["src"]
+    # 其他信息
+    phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
+    floor = comment.find("strong", class_="p_floor").get_text()
+    comm_reply = comment.find('span', class_='comm_reply').findChildren("a", recursive= False)
+    if comm_reply and len(comm_reply) > 3:
+        #支持
+        agree = comm_reply[1].get_text()
+        #反对
+        against = comm_reply[2].get_text()
+    else:
+        agree = None
+        against = None
+    return {'name': name,
              'content': content,
              'posttime': posttime,
              'position': position,
              'phone_model': phone_model,
              'avatar': avatar,
-             'floor': floor
-             })
-    return info_list
+             'floor': floor,
+             "agree": agree,
+             "against": against
+             }
 
 
 def getHashId(newsid):
