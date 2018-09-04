@@ -55,7 +55,7 @@ BackgroundItem{
         color: topplat ? Theme.highlightColor : Theme.secondaryColor
         anchors {
             bottom: parent.bottom
-            left: newsImage.right
+            left: topplat ? newsImage.right :parent.left
             bottomMargin: Theme.paddingMedium
             leftMargin: Theme.paddingMedium
         }
