@@ -28,6 +28,13 @@ BackgroundItem{
             top: parent.top
             margins: Theme.paddingMedium
         }
+        Image{
+            anchors.fill: parent
+            source: Qt.resolvedUrl("../gfx/default.jpg");
+            visible: parent.status == Image.Error
+            width: parent.width
+            height: parent.height
+        }
     }
 
     Label{
@@ -56,7 +63,7 @@ BackgroundItem{
         anchors {
             bottom: parent.bottom
             left: newsImage.right
-            bottomMargin: Theme.paddingMedium
+//            bottomMargin: Theme.paddingMedium
             leftMargin: Theme.paddingMedium
         }
     }
@@ -71,7 +78,7 @@ BackgroundItem{
         anchors {
             bottom: parent.bottom
             right: parent.right
-            bottomMargin: Theme.paddingMedium
+//            bottomMargin: Theme.paddingMedium
             rightMargin: Theme.paddingMedium
         }
     }

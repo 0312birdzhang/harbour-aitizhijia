@@ -117,4 +117,7 @@ Page{
         py.getAllComments(newsid,1);
         py.getCommentsNum(newsid);
     }
+    Component.onDestruction: {
+        appwindow.loading = false;
+    }
 }

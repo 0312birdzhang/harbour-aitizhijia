@@ -46,12 +46,12 @@ BackgroundItem{
             leftMargin: Theme.paddingSmall
             topMargin: Theme.paddingMedium
         }
-        width:Screen.width/5 - Theme.paddingMedium
+        width:Screen.width/6 - Theme.paddingMedium
         height:width
         fillMode: Image.PreserveAspectFit;
         source: avatar
         Image{
-            source: "https://img.ithome.com/images/v2.1/noavatar.png"
+            source: Qt.resolvedUrl("../gfx/noavatar.png");
             visible: parent.status == Image.Error
             anchors.fill: parent
             width: parent.width

@@ -151,4 +151,7 @@ Page {
         JS.newsDetailPage = detailpage;
         JS.getRelated(newsid)
     }
+    Component.onDestruction: {
+        appwindow.loading = false;
+    }
 }
