@@ -76,7 +76,7 @@ def parseComment(comment):
     # 评论内容
     content = comment.find('p').text
     # 用户名
-    name = comment.find('span', class_='nick').get_text()
+    nickname = comment.find('span', class_='nick').get_text()
     # 发帖时间与位置
     posandtime = comment.find("span", class_="posandtime").get_text()
     position = posandtime.split("\xa0")[0]
@@ -95,7 +95,7 @@ def parseComment(comment):
     else:
         agree = None
         against = None
-    return {'name': name,
+    return {'nickname': nickname,
              'content': content,
              'posttime': posttime,
              'position': position,
