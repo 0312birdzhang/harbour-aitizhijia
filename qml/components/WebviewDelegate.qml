@@ -28,8 +28,8 @@ Column{
         experimental.preferences.offlineWebApplicationCacheEnabled: true
         experimental.preferences.universalAccessFromFileURLsAllowed: true
         experimental.preferences.webGLEnabled: true
-        experimental.userAg*/ent: "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25"
-
+        experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25"
+        */
         BusyIndicator {
             id: busyIndicator
             anchors.centerIn: parent
