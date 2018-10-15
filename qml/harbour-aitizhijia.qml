@@ -131,7 +131,7 @@ ApplicationWindow
         html = html.replace(/<a href=/g,"<a style='color:" + Theme.highlightColor + "' target='_blank' href=");
         html = html.replace(/<a class=/g,"<a style='color:" + Theme.highlightColor + "' target='_blank' class=");
         html = html.replace(/<p>/g,"<p style='text-indent:24px'>");
-        html = html.replace(/<img\ssrc=\"\/assets\//g, "<img src=\""+siteUrl+"/assets/");
+//        html = html.replace(/<img\ssrc=\"\/assets\//g, "<img src=\""+siteUrl+"/assets/");
         html = html.replace(/<p style='text-indent:24px'><img/g,"<p><img");
         html = html.replace(/<p style='text-indent:24px'><a [^<>]*href=\"([^<>"]*)\".*?><img/g,"<p><a href='$1'><img");
         html = html.replace(/&#x2F;/g,"/");
@@ -174,6 +174,7 @@ ApplicationWindow
     }
 
     Component.onCompleted: {
+        JS.app = appwindow;
         JS.signalcenter = signalCenter
     }
 }

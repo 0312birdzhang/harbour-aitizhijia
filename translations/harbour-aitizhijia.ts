@@ -13,9 +13,35 @@
     </message>
 </context>
 <context>
+    <name>ImageHandle</name>
+    <message>
+        <source>Loading image...%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error loading image</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>ImagePage</name>
+    <message>
+        <source>Loading image...%1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Error loading image</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>harbour-aitizhijia</name>
     <message>
         <source>Request timeout</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Starting open link...</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

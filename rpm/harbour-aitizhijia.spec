@@ -13,8 +13,8 @@ Name:       harbour-aitizhijia
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    My Sailfish OS Application
-Version:    0.1
-Release:    3
+Version:    0.2
+Release:    1
 Group:      Qt/Qt
 License:    LICENSE
 BuildArch:  noarch
@@ -23,8 +23,9 @@ Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-aitizhijia.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   libsailfishapp-launcher
-Requires:   python3-requests
+# Requires:   python3-requests
 Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.3.0
+Requires:   qt5-qtdeclarative-import-xmllistmodel
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.3
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)

@@ -24,7 +24,7 @@ Item {
         width: bw;
         height: parent.height;
         fillMode: Image.PreserveAspectFit;
-        sourceSize.width: bw;
+//        sourceSize.width: bw;
         source: content;
         asynchronous: true;
         playing: false

@@ -2,6 +2,7 @@
 
 Qt.include("api.js")
 
+var app;
 var signalcenter;
 
 function sendWebRequest(url, callback, method, postdata) {

@@ -2,7 +2,7 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 
 import QtWebKit 3.0
-import QtWebKit.experimental 1.0
+//import QtWebKit.experimental 1.0
 
 Column{
     width: parent.width
@@ -24,11 +24,11 @@ Column{
         width: parent.width
         height: parent.height * 0.56
         opacity: 0
-        experimental.preferences.localStorageEnabled: true
+        /*experimental.preferences.localStorageEnabled: true
         experimental.preferences.offlineWebApplicationCacheEnabled: true
         experimental.preferences.universalAccessFromFileURLsAllowed: true
         experimental.preferences.webGLEnabled: true
-        experimental.userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25"
+        experimental.userAg*/ent: "Mozilla/5.0 (iPhone; CPU iPhone OS 6_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10A5376e Safari/8536.25"
 
         BusyIndicator {
             id: busyIndicator
