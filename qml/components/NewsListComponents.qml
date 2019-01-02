@@ -29,10 +29,11 @@ BackgroundItem{
             margins: Theme.paddingMedium
         }
         width: parent.width/2.5
+        sourceSize.width: width
         Image{
             anchors.fill: parent
             source: Qt.resolvedUrl("../gfx/default.jpg");
-            visible: parent.status != Image.Ready
+            visible: parent.status !== Image.Ready
             width: parent.width
             height: parent.height
         }
