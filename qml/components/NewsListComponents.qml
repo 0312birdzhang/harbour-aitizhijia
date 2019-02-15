@@ -23,19 +23,25 @@ BackgroundItem{
     Image{
         id: newsImage
         source: image
+        z: 1
         anchors{
             left: parent.left
             top: parent.top
             margins: Theme.paddingMedium
         }
-        width: parent.width/2.5
+        fillMode: Image.Stretch
+        width: parent.width/3
         sourceSize.width: width
+        sourceSize.height: width * Screen.width / Screen.height
         Image{
+            z:2
             anchors.fill: parent
             source: Qt.resolvedUrl("../gfx/default.jpg");
             visible: parent.status !== Image.Ready
             width: parent.width
             height: parent.height
+            sourceSize.width: width
+            sourceSize.height: height
         }
     }
 
