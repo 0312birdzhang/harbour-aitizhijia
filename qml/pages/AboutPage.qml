@@ -80,7 +80,10 @@ Page {
             }
             Label {
                 text:"version 0.1<br/>
-                        初始版本"
+                        初始版本" +
+                    "<br/>" +
+                     "version 0.2<br/>
+                        资讯详情由webview更改为原生显示"
                 width: parent.width - Theme.paddingLarge * 2
                 wrapMode: Text.WordWrap
                 anchors.horizontalCenter: parent.horizontalCenter
