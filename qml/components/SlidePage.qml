@@ -55,10 +55,17 @@ Item{
                 id: mouseArea;
                 anchors.fill: parent;
                 onClicked: {
-                    pageStack.push(Qt.resolvedUrl("../pages/NewsDetail.qml"),{
-                                   "newsid":newsid,
-                                   "newstitle": title
+                    if(linkurl.indexOf("www.ithome.com") > 0 ){
+                        // https://www.ithome.com/0/409/568.htm
+                        var links = linkurl.split("/");
+                        var newsid = links[4]+links[5].replace("\.htm","");
+                        pageStack.push(Qt.resolvedUrl("../pages/NewsDetail.qml"),{
+                                       "newsid":newsid,
+                                       "newstitle": title
                                });
+                    }else{
+                        Qt.openUrlExternally(linkurl);
+                    }
                 }
             }
         }

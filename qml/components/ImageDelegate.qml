@@ -19,12 +19,10 @@ Item {
 
     Image {
         id: img;
-//        anchors.horizontalCenter: root.horizontalCenter;
-        width: Screen.width - Theme.paddingMedium;
-        anchors.margins: Theme.paddingSmall
+        anchors.horizontalCenter: root.horizontalCenter;
+        sourceSize.width: Screen.width - Theme.paddingSmall;
         cache: true;
-        fillMode: Image.PreserveAspectFit;
-        sourceSize.width: width;
+        fillMode:  Image.PreserveAspectFit
         source: content;
         asynchronous: true;
     }

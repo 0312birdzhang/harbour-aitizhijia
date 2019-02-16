@@ -71,13 +71,17 @@ BackgroundItem{
         anchors {
             bottom: parent.bottom
             left: parent.left
-            bottomMargin: Theme.paddingMedium
             leftMargin: Theme.paddingMedium
         }
     }
     Label{
         id:viewcount
-        text: commentcount? ("评论 : "+commentcount+" / 浏览 : "+hitcount):""
+        text: {
+            if(!commentcount)commentcount = "0";
+            if(!hitcount)hitcount = "0";
+
+            return "评论 : "+commentcount+" / 浏览 : "+hitcount
+            }
         //opacity: 0.7
         font.pixelSize: Theme.fontSizeTiny
         //font.italic: true
@@ -86,7 +90,6 @@ BackgroundItem{
         anchors {
             bottom: parent.bottom
             right: parent.right
-//            bottomMargin: Theme.paddingMedium
             rightMargin: Theme.paddingMedium
         }
     }

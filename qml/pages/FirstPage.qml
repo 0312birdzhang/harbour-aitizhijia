@@ -19,7 +19,7 @@ Page {
         id: slideModel
         source: JS.getSlideUrl()
         query: "/rss/channel/item[contains(lower-case(child::opentype),'1')]"
-        XmlRole { name: "newsid"; query: "link/number()" }
+        XmlRole { name: "linkurl"; query: "link/string()" }
         XmlRole { name: "title"; query: "title/string()" }
         XmlRole { name: "image"; query: "image/string()" }
         XmlRole { name: "opentype"; query: "opentype/string()" }
@@ -35,8 +35,8 @@ Page {
         XmlRole { name: "postdate"; query: "postdate/string()" }
         XmlRole { name: "description"; query: "description/string()" }
         XmlRole { name: "hitcount"; query: "hitcount/number()" }
-        XmlRole { name: "commentcount"; query: "commentcount/number()" }
-        XmlRole { name: "lapinid"; query: "lapinid/number()" }
+        XmlRole { name: "commentcount"; query: "commentcount/string()" }
+        XmlRole { name: "lapinid"; query: "lapinid/string()" }
         XmlRole { name: "topplat"; query: "topplat/string()" }
         onStatusChanged: {
             switch(status){
