@@ -117,7 +117,7 @@ def getHashId(newsid):
         # if hashsoup:
         #     hashid = hashsoup.get("value")
         #     return hashid
-        pattern = re.compile(r"var ch11 = '(.*?)';$", re.MULTILINE | re.DOTALL)
+        pattern = re.compile(r"var pagetype = '(.*?)';$", re.MULTILINE | re.DOTALL)
         script = soup.find("script", text=pattern)
         if script:
             return pattern.search(script.text).group(1)

@@ -30,7 +30,7 @@ BackgroundItem{
             margins: Theme.paddingMedium
         }
         fillMode: Image.Stretch
-        width: parent.width/3
+        width: parent.width/3.5
         sourceSize.width: width
         sourceSize.height: width * Screen.width / Screen.height
         Image{
