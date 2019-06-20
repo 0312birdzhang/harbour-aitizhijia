@@ -14,7 +14,7 @@ Name:       harbour-aitizhijia
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 Summary:    My Sailfish OS Application
 Version:    0.2
-Release:    2
+Release:    3
 Group:      Qt/Qt
 License:    LICENSE
 BuildArch:  noarch
