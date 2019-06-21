@@ -62,6 +62,8 @@ def parse_html(html):
     info_list = []
     soup = BeautifulSoup(html, 'html.parser')
     comment_list = soup.find_all('li', class_='entry')
+    if not comment_list:
+        return info_list
     for comment in comment_list:
         commentMap = parseComment(comment)
         comments_in_floor = comment.find_all('li', class_='gh')
@@ -73,38 +75,41 @@ def parse_html(html):
     return info_list
 
 def parseComment(comment):
-    # 评论内容
-    content = comment.find('p').text
-    # 用户名
-    nickname = comment.find('span', class_='nick').get_text()
-    # 发帖时间与位置
-    posandtime = comment.find("span", class_="posandtime").get_text()
-    position = posandtime.split("\xa0")[0]
-    posttime = posandtime.split("\xa0")[1]
-    # 头像
-    avatar = "https:" + comment.find("img", class_="headerimage")["src"]
-    # 其他信息
-    phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
-    floor = comment.find("strong", class_="p_floor").get_text()
-    comm_reply = comment.find('span', class_='comm_reply').findChildren("a", recursive= False)
-    if comm_reply and len(comm_reply) > 3:
-        #支持
-        agree = comm_reply[1].get_text()
-        #反对
-        against = comm_reply[2].get_text()
-    else:
-        agree = None
-        against = None
-    return {'nickname': nickname,
-             'content': content,
-             'posttime': posttime,
-             'position': position,
-             'phone_model': phone_model,
-             'avatar': avatar,
-             'floor': floor,
-             "agree": agree,
-             "against": against
-             }
+    try:
+        # 评论内容
+        content = comment.find('p').text
+        # 用户名
+        nickname = comment.find('span', class_='nick').get_text()
+        # 发帖时间与位置
+        posandtime = comment.find("span", class_="posandtime").get_text()
+        #position = posandtime.split("\xa0")[0]
+        #posttime = posandtime.split("\xa0")[1]
+        # 头像
+        avatar = "https:" + comment.find("img", class_="headerimage")["src"]
+        # 其他信息
+        phone_model = comment.find("span", class_="mobile").get_text() if comment.find("span", class_="mobile") else ""
+        floor = comment.find("strong", class_="p_floor").get_text()
+        comm_reply = comment.find('span', class_='comm_reply').findChildren("a", recursive= False)
+        if comm_reply and len(comm_reply) > 3:
+            #支持
+            agree = comm_reply[1].get_text()
+            #反对
+            against = comm_reply[2].get_text()
+        else:
+            agree = None
+            against = None
+        return {'nickname': nickname,
+                'content': content,
+                'posttime': posandtime,
+                'position': "",
+                'phone_model': phone_model,
+                'avatar': avatar,
+                'floor': floor,
+                "agree": agree,
+                "against": against
+                }
+    except Exception as e:
+        print(str(e))
 
 
 def getIframe(newsid):
@@ -120,7 +125,7 @@ def getIframe(newsid):
         return ""
 
 def getHashId(newsid):
-    iframeid = getIframe(newsid)
+    iframeid = getIframe(str(newsid))
     url = "https://dyn.ithome.com/comment/%s" % (iframeid,)
     try:
         html = get(url)
@@ -143,6 +148,7 @@ def getCommentsNum(newsid):
         html = get(url)
         logger.debug(str(html))
         # if(document.getElementById('commentcount')!=null)  document.getElementById('commentcount').innerHTML = '34';
+        # if(document.getElementById('commentcount')!=null)  document.getElementById('commentcount').innerHTML = '27';
         total = html.split("innerHTML")[1].replace("=","").replace("'","").replace(";","")
         return int(total)
     except Exception as e:
@@ -171,4 +177,5 @@ def post(url, data):
 
 
 if __name__ == "__main__":
-    print(getHashId("429482"))
+    # print(getCommentsNum("429482"))
+    print(get_comment_page("429282",1))

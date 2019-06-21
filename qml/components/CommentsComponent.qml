@@ -71,10 +71,11 @@ BackgroundItem{
          maximumLineCount: 3
          wrapMode: Text.WordWrap
          anchors {
-             top:userPic.bottom
-             horizontalCenter: userPic.horizontalCenter
-             topMargin: Theme.paddingSmall
+            top:userPic.top
+            left:userPic.right
+            leftMargin: Theme.paddingMedium
          }
+         
      }
 
     Label{
@@ -82,10 +83,10 @@ BackgroundItem{
         text:phone_model
         font.pixelSize: Theme.fontSizeExtraSmall
         anchors {
-            top:userPic.top
-            left:userPic.right
-            leftMargin: Theme.paddingMedium
-        }
+             top:userPic.bottom
+             horizontalCenter: userPic.horizontalCenter
+             topMargin: Theme.paddingSmall
+         }
     }
 
     Label{
