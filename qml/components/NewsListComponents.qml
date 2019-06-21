@@ -32,7 +32,7 @@ BackgroundItem{
         fillMode: Image.Stretch
         width: parent.width/3.5
         sourceSize.width: width
-        sourceSize.height: width * Screen.width / Screen.height
+        sourceSize.height: width * Screen.width * 1.3 / Screen.height
         Image{
             z:2
             anchors.fill: parent

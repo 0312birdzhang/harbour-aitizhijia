@@ -107,21 +107,32 @@ def parseComment(comment):
              }
 
 
-def getHashId(newsid):
-    url = "https://dyn.ithome.com/comment/%s" % (newsid,)
+def getIframe(newsid):
+    url = "https://www.ithome.com/0/%s/%s.htm" % (newsid[:3], newsid[3:])
     try:
         html = get(url)
-#        logger.debug("hash html",html)
         soup = BeautifulSoup(html, "html.parser")
-        # hashsoup = soup.find("input", attrs={"id":"hash"})
-        # if hashsoup:
-        #     hashid = hashsoup.get("value")
-        #     return hashid
+        iframes = soup.find_all("iframe")
+        for iframe in iframes:
+            if iframe.get("data"):
+                return iframe["data"]
+    except Exception as e:
+        return ""
+
+def getHashId(newsid):
+    iframeid = getIframe(newsid)
+    url = "https://dyn.ithome.com/comment/%s" % (iframeid,)
+    try:
+        html = get(url)
+        soup = BeautifulSoup(html, "html.parser")
         pattern = re.compile(r"var pagetype = '(.*?)';$", re.MULTILINE | re.DOTALL)
         script = soup.find("script", text=pattern)
         if script:
             return pattern.search(script.text).group(1)
+        else:
+            print("not found")
     except Exception as e:
+        print(str(e))
         logger.error(str(e))
     return ""
 
@@ -144,6 +155,7 @@ def get(url):
         r = requests.get(url, headers=headers)
         return r.text
     except Exception as e:
+        print(str(e))
         logger.error(str(e))
     return None
 
@@ -159,4 +171,4 @@ def post(url, data):
 
 
 if __name__ == "__main__":
-    print(getCommentsNum("376751"))
+    print(getHashId("429482"))
