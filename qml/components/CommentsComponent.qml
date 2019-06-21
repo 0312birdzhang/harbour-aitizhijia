@@ -66,16 +66,16 @@ BackgroundItem{
          text: nickname
          width: userPic.width
          font.pixelSize: Theme.fontSizeExtraSmall * 0.7
+         
          horizontalAlignment: Text.AlignLeft
          truncationMode: TruncationMode.Elide
          maximumLineCount: 3
          wrapMode: Text.WordWrap
          anchors {
-            top:userPic.top
-            left:userPic.right
-            leftMargin: Theme.paddingMedium
+             top:userPic.bottom
+             horizontalCenter: userPic.horizontalCenter
+             topMargin: Theme.paddingSmall
          }
-         
      }
 
     Label{
@@ -83,10 +83,10 @@ BackgroundItem{
         text:phone_model
         font.pixelSize: Theme.fontSizeExtraSmall
         anchors {
-             top:userPic.bottom
-             horizontalCenter: userPic.horizontalCenter
-             topMargin: Theme.paddingSmall
-         }
+            top:userPic.top
+            left:userPic.right
+            leftMargin: Theme.paddingMedium
+        }
     }
 
     Label{
