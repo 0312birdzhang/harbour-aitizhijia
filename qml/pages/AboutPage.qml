@@ -27,7 +27,7 @@ Page {
             }
 
             Label {
-                text:  appwindow.appname + " 0.1"
+                text:  appwindow.appname
                 horizontalAlignment: Text.Center
                 width: parent.width - Theme.paddingLarge * 2
                 anchors.horizontalCenter: parent.horizontalCenter
