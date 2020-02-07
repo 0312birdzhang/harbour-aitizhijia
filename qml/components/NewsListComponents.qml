@@ -37,7 +37,7 @@ BackgroundItem{
             z:2
             anchors.fill: parent
             source: Qt.resolvedUrl("../gfx/default.jpg");
-            visible: parent.status !== Image.Ready
+            visible: newsImage.status !== Image.Ready
             width: parent.width
             height: parent.height
             sourceSize.width: width

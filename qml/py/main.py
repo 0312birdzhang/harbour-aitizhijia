@@ -23,11 +23,10 @@ def get_hot_comment(newsid):
         'type': 'hotcomment'
     }
     try:
-        r = requests.post(
+        result = post(
             "https://dyn.ithome.com/ithome/getajaxdata.aspx",
              data=data
         )
-        result = r.text
         if not result:
             return list()
         html = json.loads(result).get("html")
@@ -46,12 +45,11 @@ def get_comment_page(newsid,pagenum):
         "page": int(pagenum),
         "hash": getHashId(newsid),
         'type': 'commentpage',
-        'order': False
+        'order': 'false'
     }
     try:
-        r = requests.post(
+        html = post(
             'https://dyn.ithome.com/ithome/getajaxdata.aspx', data=data)
-        html = r.text
         return parse_html(html)
     except Exception as e:
         logger.error(str(e))
@@ -178,4 +176,4 @@ def post(url, data):
 
 if __name__ == "__main__":
     # print(getCommentsNum("429482"))
-    print(get_comment_page("429282",1))
+    print(get_comment_page("471939",1))
