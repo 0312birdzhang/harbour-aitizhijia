@@ -5,3 +5,8 @@ Icon=harbour-aitizhijia
 Exec=sailfish-qml harbour-aitizhijia
 Name=AiTiHome
 Name[zh_CN]=AiTi之家
+
+[X-Sailjail]
+OrganizationName=club.sailfishos
+ApplicationName=aitihome
+Permissions=Pictures;Internet;Notifications;
