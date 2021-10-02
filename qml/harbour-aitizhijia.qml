@@ -124,6 +124,16 @@ ApplicationWindow
                 signalCenter.getCommentsNum(result);
             });
         }
+
+        function downloadFile(url, filename){
+            loading = true;
+            call('main.downloadFile', [url, filename], function(result){
+                loading = false;
+                notification.show(
+                            result? qsTr("Picture downloaded"): qsTr("Download picture failed")
+                            )
+            })
+        }
     }
 
 

@@ -169,4 +169,22 @@ Page {
            })
        }
     }
+
+    IconButton {
+       enabled: imagePreview.status == Image.Ready
+       anchors{
+           right: imagePage.right;
+           rightMargin: Theme.paddingLarge;
+           bottom: imagePage.bottom;
+           bottomMargin: Theme.paddingLarge;
+       }
+       width: Theme.iconSizeMedium+Theme.paddingMedium*2
+       icon.source: "image://theme/icon-m-cloud-download"
+       onClicked: {
+           console.log(imagePreview.source);
+           var filename = localUrl.split("/");
+           py.downloadFile(localUrl, filename[filename.length-1]);
+
+       }
+    }
 }

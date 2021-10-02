@@ -5,7 +5,8 @@ import json
 import sys
 import logging
 import re
-
+import shutil
+import os
 
 logger = logging.getLogger("aitizhijia")
 formatter = logging.Formatter("%(asctime)s %(pathname)s %(filename)s %(funcName)s %(lineno)s \
@@ -14,6 +15,8 @@ console_handler = logging.StreamHandler(sys.stdout)
 console_handler.formatter = formatter
 logger.addHandler(console_handler)
 logger.setLevel(logging.DEBUG)
+HOME = os.path.expanduser("~")
+savePath = os.path.join(HOME, "Pictures","AitiHome")
 
 def get_hot_comment(newsid):
     data = {
@@ -173,6 +176,17 @@ def post(url, data):
         logger.error(str(e))
     return None
 
+def downloadFile(url, filename):
+    readlPath = "%s/%s" % (savePath, url.split('/')[-1])
+    if not os.path.exists(savePath):
+        os.mkdir(savePath)
+    try:
+        r = requests.get(url, stream=True)
+        with open(readlPath, 'wb') as f:
+            shutil.copyfileobj(r.raw, f)
+    except Exception as e:
+        return False
+    return True
 
 if __name__ == "__main__":
     # print(getCommentsNum("429482"))
