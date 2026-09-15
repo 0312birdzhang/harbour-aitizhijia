@@ -3,7 +3,8 @@ import Sailfish.Silica 1.0
 
 BackgroundItem{
     id:showlist
-    height: newsImage.height + Theme.paddingLarge * 2
+    height: Math.max(newsImage.height + Theme.paddingLarge * 2,
+                     titleid.implicitHeight + timeid.implicitHeight + Theme.paddingLarge * 3)
     width: parent.width
 
 
@@ -51,8 +52,8 @@ BackgroundItem{
         font.pixelSize: Theme.fontSizeSmall
         truncationMode: TruncationMode.Fade
         wrapMode: Text.WordWrap
-        color: Theme.highlightColor
-        font.bold:true;
+        color: topplat ? Theme.highlightColor : Theme.primaryColor
+        font.bold: topplat
         anchors {
             top:parent.top;
             left: newsImage.right
@@ -65,7 +66,7 @@ BackgroundItem{
 
     Label{
         id:timeid
-        text: topplat ? "置顶" : "发布时间 : " +  fmtTime(postdate)
+        text: topplat ? "置顶 · " + fmtTime(postdate) : fmtTime(postdate)
         font.pixelSize: Theme.fontSizeTiny
         color: topplat ? Theme.highlightColor : Theme.secondaryColor
         anchors {
@@ -77,10 +78,7 @@ BackgroundItem{
     Label{
         id:viewcount
         text: {
-            if(!commentcount)commentcount = "0";
-            if(!hitcount)hitcount = "0";
-
-            return "评论 : "+commentcount+" / 浏览 : "+hitcount
+            return "评论 " + (commentcount || 0) + (hitcount ? "  ·  浏览 " + hitcount : "")
             }
         //opacity: 0.7
         font.pixelSize: Theme.fontSizeTiny
@@ -102,7 +100,9 @@ BackgroundItem{
     onClicked: {
         pageStack.push(Qt.resolvedUrl("../pages/NewsDetail.qml"),{
                            "newsid": newsid,
-                           "newstitle":title
+                           "newstitle": title,
+                           "postdate": postdate,
+                           "commentcount": commentcount || 0
                        });
     }
 }

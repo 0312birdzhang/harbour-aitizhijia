@@ -2,7 +2,6 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 import Nemo.Notifications 1.0
 import Nemo.Configuration 1.0
-import io.thp.pyotherside 1.5
 
 import "pages"
 import "js/main.js" as JS
@@ -12,6 +11,10 @@ ApplicationWindow
     id: appwindow
     property bool loading: false
     property string appname: "AiTi之家"
+    property alias userhash: config.userhash
+    property alias username: config.username
+    property alias nickname: config.nickname
+    property bool loggedIn: userhash !== ""
     initialPage: config.accepted ? firstpage : discclaimer
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
     allowedOrientations: Orientation.Portrait
@@ -20,6 +23,9 @@ ApplicationWindow
         id: config
         path: "/app/xyz.birdzhang.aitizhijia"
         property bool accepted: false
+        property string userhash: ""
+        property string username: ""
+        property string nickname: ""
     }
 
     Notification{
@@ -92,51 +98,6 @@ ApplicationWindow
         }
     }
 
-    Python{
-        id: py
-        Component.onCompleted: {
-           addImportPath(Qt.resolvedUrl('./py/'));
-           py.importModule('main', function () {
-
-           });
-        }
-
-        function getHotComments(newsid){
-            loading = true;
-            call('main.get_hot_comment',[newsid],function(result){
-                loading = false;
-                signalCenter.getHotComment(result);
-            });
-        }
-
-        function getAllComments(newsid, pageNum){
-            loading = true;
-            call('main.get_comment_page',[newsid,pageNum],function(result){
-                loading = false;
-                signalCenter.getCommentPage(result);
-            });
-        }
-
-        function getCommentsNum(newsid){
-            loading = true;
-            call('main.getCommentsNum',[newsid],function(result){
-                loading = false;
-                signalCenter.getCommentsNum(result);
-            });
-        }
-
-        function downloadFile(url, filename){
-            loading = true;
-            call('main.downloadFile', [url, filename], function(result){
-                loading = false;
-                notification.show(
-                            result? qsTr("Picture downloaded"): qsTr("Download picture failed")
-                            )
-            })
-        }
-    }
-
-
     function formathtml(html) {
         html = html.replace(/<a href=/g,"<a style='color:" + Theme.highlightColor + "' target='_blank' href=");
         html = html.replace(/<a class=/g,"<a style='color:" + Theme.highlightColor + "' target='_blank' class=");
@@ -146,6 +107,35 @@ ApplicationWindow
         html = html.replace(/<p style='text-indent:24px'><a [^<>]*href=\"([^<>"]*)\".*?><img/g,"<p><a href='$1'><img");
         html = html.replace(/&#x2F;/g,"/");
         return html;
+    }
+
+    function showMessage(message) {
+        notification.show(message)
+    }
+
+    function openLogin() {
+        pageStack.push(Qt.resolvedUrl("pages/LoginDialog.qml"))
+    }
+
+    function logout() {
+        userhash = ""
+        username = ""
+        nickname = ""
+        notification.show("已注销")
+    }
+
+    function openComment(newsid, refreshTarget, parentCommentId, rootCommentId, replyTo) {
+        if (!loggedIn) {
+            openLogin()
+            return
+        }
+        pageStack.push(Qt.resolvedUrl("pages/CommentDialog.qml"), {
+                           "newsid": newsid,
+                           "refreshTarget": refreshTarget,
+                           "parentCommentId": parentCommentId || 0,
+                           "rootCommentId": rootCommentId || 0,
+                           "replyTo": replyTo || ""
+                       })
     }
 
     function splitContent(topic_content, parent){

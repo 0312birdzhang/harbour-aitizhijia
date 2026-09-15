@@ -40,7 +40,7 @@ Page {
             Label {
                 textFormat: Text.RichText;
                 text: "首先感谢梦梦（@旺仔狂魔）提供的图标.<br/> "
-                       + "本软件是 www.ithome.com 的第三方实现，目前只可以查看资讯和评论。"
+                       + "本软件是 www.ithome.com 的第三方实现，界面与数据接口基于 KaiOS 版本重写。"
                 width: parent.width - Theme.paddingLarge * 2
                 anchors.horizontalCenter: parent.horizontalCenter
                 wrapMode: Text.WordWrap
@@ -83,7 +83,15 @@ Page {
                         初始版本" +
                     "<br/>" +
                      "version 0.2<br/>
-                        资讯详情由webview更改为原生显示"
+                        资讯详情由webview更改为原生显示<br/>" +
+                     "version 0.3.0<br/>
+                        使用 JSON 接口重写资讯、正文和评论浏览<br/>" +
+                     "release 2<br/>
+                        支持账号登录、注销和发表评论<br/>" +
+                     "release 3<br/>
+                        修复评论、登录及头像接口的 HTTP 302 错误<br/>" +
+                     "version 0.4.0<br/>
+                        支持手机验证码登录、楼中楼显示及指定楼层回复"
                 width: parent.width - Theme.paddingLarge * 2
                 wrapMode: Text.WordWrap
                 anchors.horizontalCenter: parent.horizontalCenter

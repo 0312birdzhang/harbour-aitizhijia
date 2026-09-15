@@ -1,134 +1,81 @@
 import QtQuick 2.0
-import QtQuick.XmlListModel 2.0
 import Sailfish.Silica 1.0
 import "../components"
 import "../js/main.js" as JS
 
 Page {
     id: newspage
-    property alias listmodel: listmodel
-    property alias listView: listView
-    property int latestNewsid:0
     allowedOrientations: Orientation.All
+    property alias listmodel: listmodel
+    property string nextCursor: ""
+    property bool hasMore: true
+    property bool loadingMore: false
 
-    ListModel{
-        id: listmodel
+    ListModel { id: listmodel }
+
+    Connections {
+        target: signalCenter
+        onLoadFailed: newspage.loadingMore = false
     }
 
-    XmlListModel {
-        id: slideModel
-        source: JS.getSlideUrl()
-        query: "/rss/channel/item[contains(lower-case(child::opentype),'1')]"
-        XmlRole { name: "linkurl"; query: "link/string()" }
-        XmlRole { name: "title"; query: "title/string()" }
-        XmlRole { name: "image"; query: "image/string()" }
-        XmlRole { name: "opentype"; query: "opentype/string()" }
+    function refresh() {
+        nextCursor = ""
+        hasMore = true
+        loadingMore = false
+        JS.loadNews(newspage, "0", true)
     }
 
-
-    XmlListModel {
-        id: xmlModel
-        query: "/rss/channel/item"
-        XmlRole { name: "newsid"; query: "newsid/number()" }
-        XmlRole { name: "image"; query: "image/string()" }
-        XmlRole { name: "title"; query: "title/string()" }
-        XmlRole { name: "postdate"; query: "postdate/string()" }
-        XmlRole { name: "description"; query: "description/string()" }
-        XmlRole { name: "hitcount"; query: "hitcount/number()" }
-        XmlRole { name: "commentcount"; query: "commentcount/string()" }
-        XmlRole { name: "lapinid"; query: "lapinid/string()" }
-        XmlRole { name: "topplat"; query: "topplat/string()" }
-        onStatusChanged: {
-            switch(status){
-            case XmlListModel.Ready:
-                signalCenter.loadFinished();
-                for (var i=0; i<count; i++) {
-                    var item = get(i);
-                    if(item.lapinid){
-                        continue;
-                    }
-                    listmodel.append({newsid: item.newsid,
-                                        title: item.title,
-                                        image: item.image,
-                                        postdate: item.postdate,
-                                        description: item.description,
-                                        hitcount: item.hitcount,
-                                        commentcount: item.commentcount
-                                        });
-                }
-                break;
-            case XmlListModel.Loading:
-                signalCenter.loadStarted();
-                break;
-            case XmlListModel.Error:
-                break;
-//                signalCenter.loadFailed(errorString());
-            default:
-                console.log(status);
-            }
-
-        }
-
+    function loadMore() {
+        if (loadingMore || !hasMore || nextCursor === "")
+            return
+        loadingMore = true
+        JS.loadNews(newspage, nextCursor, false)
     }
 
-
-    function loadMore(newsid){
-        var url = JS.getMoreNews(newsid);
-        xmlModel.source = url;
-        xmlModel.reload();
-    }
-
-
-
-
-    SilicaListView{
-        id: listView
+    SilicaListView {
         anchors.fill: parent
-        width: parent.width
         clip: true
-        header: SlidePage{
-            bannermodel: slideModel
-        }
+        model: listmodel
+        header: PageHeader { title: "IT之家" }
 
         PullDownMenu {
-            MenuItem {
-                text: "关于"
-                onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml"));
-            }
-            MenuItem {
-                text: "刷新"
-                onClicked: JS.getNewsList();
-            }
-        }
-        model: listmodel
-        delegate: NewsListComponents{}
-        onDraggingChanged: {
-            if (!dragging && !loading) {
-                if (atYEnd) {
-                    var newsid = listmodel.get(listmodel.count-1).newsid;
-                    loadMore(newsid)
-                }
-            }
+            MenuItem { text: "关于"; onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml")) }
+            MenuItem { visible: appwindow.loggedIn; text: "注销（" + appwindow.nickname + "）"; onClicked: appwindow.logout() }
+            MenuItem { visible: !appwindow.loggedIn; text: "登录"; onClicked: appwindow.openLogin() }
+            MenuItem { text: "刷新"; onClicked: newspage.refresh() }
         }
 
-        VerticalScrollDecorator {flickable: listView}
+        delegate: NewsListComponents { }
+        VerticalScrollDecorator { }
+
+        onAtYEndChanged: {
+            if (atYEnd && count > 0)
+                newspage.loadMore()
+        }
+
+        footer: Item {
+            width: parent.width
+            height: Theme.itemSizeLarge
+            BusyIndicator {
+                anchors.centerIn: parent
+                running: newspage.loadingMore
+                size: BusyIndicatorSize.Small
+            }
+            Label {
+                anchors.centerIn: parent
+                visible: !newspage.loadingMore && !newspage.hasMore && listmodel.count > 0
+                text: "我们是有底线的"
+                color: Theme.secondaryColor
+                font.pixelSize: Theme.fontSizeSmall
+            }
+        }
 
         ViewPlaceholder {
-            enabled: listView.count == 0 && !PageStatus.Active
-            text: "无结果，点击重试"
-            MouseArea{
-                anchors.fill: parent
-                onClicked: {
-                    JS.getNewsList();
-                }
-            }
+            enabled: listmodel.count === 0 && !appwindow.loading
+            text: "暂无资讯"
+            hintText: "下拉刷新重试"
         }
-
     }
 
-    Component.onCompleted: {
-        JS.signalcenter = signalCenter
-        JS.newsListPage = newspage;
-        JS.getNewsList();
-    }
+    Component.onCompleted: refresh()
 }

@@ -1,123 +1,75 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
-
 import "../components"
+import "../js/main.js" as JS
 
-Page{
+Page {
     id: commentsPage
     property int newsid
-    property int total: 1
-    property int pagenum: 1
+    property alias commentModel: commentModel
+    property string nextCursor: ""
+    property bool hasMore: true
+    property bool loadingMore: false
 
-    ListModel{
-        id: hotModel
-    }
+    ListModel { id: commentModel }
 
-    ListModel{
-        id: commentModel
-    }
-
-    Connections{
+    Connections {
         target: signalCenter
-        onGetHotComment:{
-            if(result){
-                for(var i = 0; i < result.length;i++){
-                    hotModel.append(result[i]);
-                }
-            }
-        }
-        onGetCommentPage:{
-            if(result){
-                for(var i = 0; i < result.length;i++){
-                    commentModel.append(result[i]);
-                }
-            }
-        }
-        onGetCommentsNum:{
-            if(result > 0){
-                total = result;
-                console.log("total comments",total)
-            }
-        }
-
+        onLoadFailed: commentsPage.loadingMore = false
     }
 
+    function loadMore() {
+        if (loadingMore || !hasMore || nextCursor === "")
+            return
+        loadingMore = true
+        JS.loadComments(commentsPage, newsid, nextCursor, false)
+    }
 
-    SilicaListView{
-        id: view
-        width: parent.width
+    function refreshComments() {
+        nextCursor = ""
+        hasMore = true
+        loadingMore = false
+        JS.loadComments(commentsPage, newsid, "", true)
+    }
+
+    function replyTo(commentId, nickname, rootId) {
+        appwindow.openComment(newsid, commentsPage, commentId, rootId, nickname)
+    }
+
+    SilicaListView {
         anchors.fill: parent
-        clip: true
-        header: Item{
-            height: column.height
-            width: parent.width
-            anchors{
-                left:parent.left
-                right:parent.right
-            }
-            Column{
-                id: column
-                width: parent.width
-                height: childrenRect.height
-                spacing: Theme.paddingLarge
-                SectionHeader{
-                    text: "热门评论"
-                    visible: hotModel.count > 0
-                    font.pixelSize: Theme.fontSizeMedium
-                }
-                Repeater{
-                    clip: true
-                    model: hotModel
-                    width: parent.width
-                    CommentsComponent{
-
-                    }
-                }
-                SectionHeader{
-                    text: "全部评论"
-                    visible: commentModel.count > 0
-                    font.pixelSize: Theme.fontSizeMedium
-                }
-            }
-        }
-
         model: commentModel
-        delegate: CommentsComponent{
-
+        header: PageHeader { title: "评论" }
+        PullDownMenu {
+            MenuItem { text: "发表评论"; onClicked: appwindow.openComment(commentsPage.newsid, commentsPage) }
+            MenuItem { text: "刷新"; onClicked: commentsPage.refreshComments() }
         }
+        delegate: CommentsComponent { }
+        VerticalScrollDecorator { }
+        onAtYEndChanged: if (atYEnd && count > 0) commentsPage.loadMore()
 
-        onDraggingChanged: {
-            if (!dragging && !loading) {
-//                console.log("dragging end");
-                if (atYEnd && pagenum*50 < total) {
-                    var lastfloor = commentModel.get(commentModel.count-1).floor;
-                    //暂时用这种方式屏蔽继续加载
-                    var floor_num = parseInt(lastfloor.replace("楼",""));
-                    if(floor_num > 1){
-                        pagenum = pagenum + 1;
-                        py.getAllComments(newsid,pagenum);
-                    }
-                }
+        footer: Item {
+            width: parent.width
+            height: Theme.itemSizeLarge
+            BusyIndicator {
+                anchors.centerIn: parent
+                running: commentsPage.loadingMore
+                size: BusyIndicatorSize.Small
+            }
+            Label {
+                anchors.centerIn: parent
+                visible: !commentsPage.loadingMore && !commentsPage.hasMore && commentModel.count > 0
+                text: "我们是有底线的"
+                color: Theme.secondaryColor
             }
         }
 
-        ViewPlaceholder{
-            enabled: commentModel.count == 0 && hotModel.count == 0
-                     && !loading && total != 1
+        ViewPlaceholder {
+            enabled: commentModel.count === 0 && !appwindow.loading
             text: "暂无评论"
             hintText: "稍后再来看吧"
         }
     }
 
-
-
-
-    Component.onCompleted: {
-        py.getHotComments(newsid);
-        py.getAllComments(newsid,1);
-        py.getCommentsNum(newsid);
-    }
-    Component.onDestruction: {
-        appwindow.loading = false;
-    }
+    Component.onCompleted: refreshComments()
 }

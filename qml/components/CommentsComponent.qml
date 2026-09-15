@@ -1,132 +1,135 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-
-BackgroundItem{
-    height:((userPic.height + nick.height)>
-                (phoneModel.height+ messageid.height + supply.height)?
-                 (userPic.height + nick.height):(phoneModel.height+ messageid.height + supply.height))
-                + Theme.paddingMedium * 4
-    contentHeight: height
+BackgroundItem {
+    id: commentItem
     width: parent.width
-    anchors.leftMargin: Theme.paddingSmall
-    anchors.rightMargin: Theme.paddingSmall
+    height: commentBody.height + Theme.paddingLarge * 2
+    contentHeight: height
+    onClicked: commentsPage.replyTo(commentId, nickname, 0)
 
-    function fmtTime(postdate) {
-        if(postdate.indexOf("T")){
-            postdate = postdate.replace("T"," ");
-        }
-        var month = parseInt(postdate.split("-")[1]);
-        if( month < 10){
-            postdate = postdate.replace("-"+month+"-", "-0"+month+"-");
-        }
-        var txt = Format.formatDate(new Date(postdate), Formatter.Timepoint)
-        var elapsed = Format.formatDate(new Date(postdate), Formatter.DurationElapsed)
-        return elapsed ? elapsed : txt
+    function formatTime(value) {
+        if (!value) return ""
+        var date = new Date(value.replace("T", " "))
+        var elapsed = Format.formatDate(date, Formatter.DurationElapsed)
+        return elapsed || Format.formatDate(date, Formatter.Timepoint)
     }
 
-    Label{
-        id:date
-        text: fmtTime(posttime) + "  " + floor
-        font.pixelSize: Theme.fontSizeExtraSmall
-        font.italic: true
-        horizontalAlignment: Text.AlignRight
-        anchors{
-            right:parent.right
-            top:userPic.top
-            rightMargin: Theme.paddingMedium
-        }
-    }
+    Column {
+        id: commentBody
+        width: parent.width - Theme.horizontalPageMargin * 2
+        anchors.horizontalCenter: parent.horizontalCenter
+        anchors.verticalCenter: parent.verticalCenter
+        spacing: Theme.paddingSmall
 
-    Image{
-        id:userPic
-        anchors {
-            left: parent.left
-            top:parent.top
-            leftMargin: Theme.paddingSmall
-            topMargin: Theme.paddingMedium
-        }
-        width:Screen.width/6 - Theme.paddingMedium
-        height:width
-        fillMode: Image.PreserveAspectFit;
-        source: avatar
-        Image{
-            source: Qt.resolvedUrl("../gfx/noavatar.png");
-            visible: parent.status == Image.Error
-            anchors.fill: parent
+        Row {
             width: parent.width
-            height: parent.height
+            spacing: Theme.paddingMedium
+
+            Image {
+                width: Theme.iconSizeMedium
+                height: width
+                fillMode: Image.PreserveAspectFit
+                source: avatar
+                Image {
+                    anchors.fill: parent
+                    source: Qt.resolvedUrl("../gfx/noavatar.png")
+                    visible: parent.status === Image.Error
+                }
+            }
+
+            Column {
+                width: parent.width - Theme.iconSizeMedium - Theme.paddingMedium
+                Label {
+                    width: parent.width
+                    text: nickname + (phone_model ? "  ·  " + phone_model : "")
+                    font.pixelSize: Theme.fontSizeSmall
+                    truncationMode: TruncationMode.Elide
+                }
+                Label {
+                    width: parent.width
+                    text: commentItem.formatTime(posttime) + (floor ? "  " + floor : "")
+                    color: Theme.secondaryColor
+                    font.pixelSize: Theme.fontSizeTiny
+                }
+            }
         }
 
-    }
+        Label {
+            width: parent.width
+            text: content
+            wrapMode: Text.WordWrap
+            color: Theme.primaryColor
+            textFormat: Text.AutoText
+            font.pixelSize: Theme.fontSizeSmall
+        }
 
+        Label {
+            width: parent.width
+            text: agree + "  " + against + "    点击回复"
+            color: Theme.secondaryColor
+            horizontalAlignment: Text.AlignRight
+            font.pixelSize: Theme.fontSizeTiny
+        }
 
-     Label{
-         id:nick
-         text: nickname
-         width: userPic.width
-         font.pixelSize: Theme.fontSizeExtraSmall * 0.7
-         
-         horizontalAlignment: Text.AlignLeft
-         truncationMode: TruncationMode.Elide
-         maximumLineCount: 3
-         wrapMode: Text.WordWrap
-         anchors {
-             top:userPic.bottom
-             horizontalCenter: userPic.horizontalCenter
-             topMargin: Theme.paddingSmall
-         }
-     }
+        Column {
+            width: parent.width
+            spacing: 1
+            visible: replies && replies.length > 0
 
-    Label{
-        id:phoneModel
-        text:phone_model
-        font.pixelSize: Theme.fontSizeExtraSmall
-        anchors {
-            top:userPic.top
-            left:userPic.right
-            leftMargin: Theme.paddingMedium
+            Repeater {
+                model: replies || []
+                delegate: Rectangle {
+                    width: parent.width
+                    height: replyColumn.height + Theme.paddingMedium * 2
+                    color: Theme.rgba(Theme.highlightBackgroundColor, 0.18)
+
+                    Column {
+                        id: replyColumn
+                        width: parent.width - Theme.paddingMedium * 2
+                        anchors.centerIn: parent
+                        spacing: Theme.paddingSmall
+
+                        Label {
+                            width: parent.width
+                            text: modelData.nickname + (modelData.replyTo ? " 回复 " + modelData.replyTo : "")
+                            color: Theme.highlightColor
+                            font.pixelSize: Theme.fontSizeExtraSmall
+                        }
+                        Label {
+                            width: parent.width
+                            text: modelData.content
+                            wrapMode: Text.WordWrap
+                            textFormat: Text.AutoText
+                            color: Theme.primaryColor
+                            font.pixelSize: Theme.fontSizeExtraSmall
+                        }
+                        Label {
+                            width: parent.width
+                            text: commentItem.formatTime(modelData.posttime) +
+                                  (modelData.floor ? "  " + modelData.floor : "") +
+                                  "    赞 " + modelData.agree + "  踩 " + modelData.against
+                            color: Theme.secondaryColor
+                            font.pixelSize: Theme.fontSizeTiny
+                            horizontalAlignment: Text.AlignRight
+                        }
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            mouse.accepted = true
+                            commentsPage.replyTo(modelData.commentId, modelData.nickname, commentId)
+                        }
+                    }
+                }
+            }
         }
     }
 
-    Label{
-        id:messageid
-        text:content
-        width: parent.width
-        font.pixelSize: Theme.fontSizeExtraSmall
-        wrapMode: Text.WordWrap
-        color: Theme.highlightColor
-        textFormat: Text.AutoText
-        horizontalAlignment: Text.AlignLeft
-        truncationMode: TruncationMode.Elide
-        anchors {
-            top:phoneModel.bottom
-            left:userPic.right
-            right:parent.right
-            margins: Theme.paddingMedium
-        }
-    }
-
-    Label{
-        id:supply
-        width: parent.width
-        text: agree + " " + against
-        wrapMode: Text.WordWrap
-        opacity:0.9
-        horizontalAlignment: Text.AlignRight
-        font.pixelSize: Theme.fontSizeExtraSmall
-        anchors{
-            right:parent.right
-            top:messageid.bottom
-            rightMargin: Theme.paddingMedium
-        }
-
-    }
-
-    //model
     Separator {
-        visible: (index>0?true:false)
-        width:parent.width;
+        width: parent.width
+        anchors.bottom: parent.bottom
         color: Theme.highlightColor
     }
 }

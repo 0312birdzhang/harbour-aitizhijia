@@ -6,15 +6,15 @@ Qt.include("base64.js")
 var key = "p#a@w^s(";
 
 function getApiBase(){
-    return "https://api.ithome.com/"
+    return "http://api.ithome.com/"
 }
 
 function getDynBase(){
     return "https://dyn.ithome.com/"
 }
 
-function newslist(){
-   return getApiBase() + "json/newslist/news?r=0";
+function newslist(cursor){
+    return getApiBase() + "json/listpage/news/" + (cursor || "0");
 }
 
 function getRelatedUrl(newsid){
@@ -28,7 +28,92 @@ function loadMore(newsid){
 }
 
 function newsdetail(newsid){
-    return getApiBase() + "xml/newscontent/"+ newsid.toString().slice(0,3) +"/"+newsid.toString().slice(3,6)+".xml"
+    return getApiBase() + "json/newscontent/" + newsid;
+}
+
+function getNextCursor(orderdate) {
+    var value = orderdate || "";
+    if (value.indexOf(".") >= 0)
+        value = value.split(".")[0];
+    value = value.replace(/-/g, "/").replace("T", " ");
+    return encryptedHex(Date.parse(value).toString(), "w^s(1#a@");
+}
+
+function getCommentSn(newsid) {
+    return encryptedHex(newsid.toString(), "(#i@x*l%");
+}
+
+function getUserHash(username, password) {
+    return encryptedHex(username + "\f" + CryptoJS.MD5(password).toString(), "(#i@x*l%");
+}
+
+function userDataUrl(userhash) {
+    return "https://my.ruanmei.com/api/User/Get?userHash=" + encodeURIComponent(userhash) +
+            "&extra=4|ithome_symbian&appver=765&device=symbian";
+}
+
+function captchaUrl() {
+    return "https://myapi.ruanmei.com/api/captcha/get?extra=ithome";
+}
+
+function smsCodeUrl() {
+    return "https://myapi.ruanmei.com/api/verifycode/sendbysms?extra=ithome";
+}
+
+function mobileLoginUrl() {
+    return "https://myapi.ruanmei.com/api/user/registerorloginbymobilecode?extra=ithome";
+}
+
+function passwordLoginUrl() {
+    return "https://myapi.ruanmei.com/api/user/loginbypassword?extra=ithome";
+}
+
+function commentSubmitUrl() {
+    return "https://cmt.ithome.com/api/comment/submit";
+}
+
+function commentPostData(userhash, nickname, newsid, content, parentCommentId, rootCommentId) {
+    var fields = {
+        "userhash": userhash,
+        "newsid": newsid,
+        "commentNick": nickname,
+        "commentContent": content,
+        "parentCommentID": parentCommentId || 0,
+        "ppcid": rootCommentId || 0,
+        "type": "comment",
+        "ver": "765",
+        "ServerDontDecode": true,
+        "client": 8,
+        "device": "Sailfish OS",
+        "notify": false
+    };
+    var values = [];
+    for (var keyName in fields)
+        values.push(encodeURIComponent(keyName) + "=" + encodeURIComponent(fields[keyName]));
+    return values.join("&");
+}
+
+function encryptedHex(value, secret) {
+    while (value.length % 8 !== 0)
+        value += "\u0000";
+    var keyHex = CryptoJS.enc.Utf8.parse(secret);
+    var encrypted = CryptoJS.DES.encrypt(value, keyHex, {
+        iv: keyHex,
+        mode: CryptoJS.mode.ECB,
+        padding: CryptoJS.pad.NoPadding
+    });
+    return fmtBytes(str2UTF8(decode64(encrypted.toString())));
+}
+
+function comments(newsid, cursor) {
+    var url = "https://cmt.ithome.com/api/comment/getnewscomment?sn=" + getCommentSn(newsid);
+    return cursor ? url + "&cid=" + cursor : url;
+}
+
+function avatarUrl(uid) {
+    var value = ("000000000" + uid).slice(-9);
+    return "https://avatar.ithome.com/avatars/" + value.slice(0, 3) + "/" +
+            value.slice(3, 5) + "/" + value.slice(5, 7) + "/" + value.slice(7) + "_60.jpg";
 }
 
 function getComments(newsid_des){

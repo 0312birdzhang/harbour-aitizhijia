@@ -14,9 +14,9 @@ Name:       harbour-aitizhijia
 %{!?qtc_make:%define qtc_make make}
 %{?qtc_builddir:%define _builddir %qtc_builddir}
 
-Summary:    My Sailfish OS Application
-Version:    0.2.5
-Release:    4
+Summary:    IT Home client for Sailfish OS
+Version:    0.4.0
+Release:    1
 Group:      Qt/Qt
 License:    LICENSE
 BuildArch:  noarch
@@ -25,8 +25,6 @@ Source0:    %{name}-%{version}.tar.bz2
 Source100:  harbour-aitizhijia.yaml
 Requires:   sailfishsilica-qt5 >= 0.10.9
 Requires:   libsailfishapp-launcher
-Requires:   pyotherside-qml-plugin-python3-qt5 >= 1.5.0
-Requires:   qt5-qtdeclarative-import-xmllistmodel
 BuildRequires:  pkgconfig(sailfishapp) >= 1.0.3
 BuildRequires:  pkgconfig(Qt5Core)
 BuildRequires:  pkgconfig(Qt5Qml)
@@ -34,7 +32,7 @@ BuildRequires:  pkgconfig(Qt5Quick)
 BuildRequires:  desktop-file-utils
 
 %description
-Short description of my Sailfish OS Application
+Native Sailfish OS client for IT Home news and comments.
 
 
 %prep
