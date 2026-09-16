@@ -5,6 +5,7 @@ import "../js/main.js" as JS
 
 Page {
     id: detailpage
+    //allowedOrientations: Orientation.All
     property string newstitle
     property int newsid
     property string postdate
@@ -16,7 +17,10 @@ Page {
     property bool detailReady: false
 
     SilicaListView {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         model: detailpage.articleModel
 
         PullDownMenu {

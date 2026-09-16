@@ -5,7 +5,7 @@ import "../js/main.js" as JS
 
 Page {
     id: newspage
-    allowedOrientations: Orientation.All
+    //allowedOrientations: Orientation.All
     property alias listmodel: listmodel
     property string nextCursor: ""
     property bool hasMore: true
@@ -33,14 +33,21 @@ Page {
     }
 
     SilicaListView {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         clip: true
         model: listmodel
         header: PageHeader { title: "IT之家" }
 
         PullDownMenu {
             MenuItem { text: "关于"; onClicked: pageStack.push(Qt.resolvedUrl("AboutPage.qml")) }
-            MenuItem { visible: appwindow.loggedIn; text: "注销（" + appwindow.nickname + "）"; onClicked: appwindow.logout() }
+            MenuItem {
+                visible: appwindow.loggedIn
+                text: "个人主页（" + appwindow.nickname + "）"
+                onClicked: pageStack.push(Qt.resolvedUrl("UserCenter.qml"))
+            }
             MenuItem { visible: !appwindow.loggedIn; text: "登录"; onClicked: appwindow.openLogin() }
             MenuItem { text: "刷新"; onClicked: newspage.refresh() }
         }

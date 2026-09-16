@@ -4,6 +4,7 @@ import "../js/main.js" as JS
 
 Dialog {
     id: commentDialog
+    //allowedOrientations: Orientation.All
     property int newsid
     property var refreshTarget: null
     property int parentCommentId: 0
@@ -12,7 +13,10 @@ Dialog {
     canAccept: commentField.text.trim().length > 0
 
     SilicaFlickable {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         contentHeight: commentColumn.height
 
         Column {

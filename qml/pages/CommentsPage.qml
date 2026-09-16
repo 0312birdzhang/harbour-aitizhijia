@@ -5,6 +5,7 @@ import "../js/main.js" as JS
 
 Page {
     id: commentsPage
+    //allowedOrientations: Orientation.All
     property int newsid
     property alias commentModel: commentModel
     property string nextCursor: ""
@@ -37,7 +38,10 @@ Page {
     }
 
     SilicaListView {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         model: commentModel
         header: PageHeader { title: "评论" }
         PullDownMenu {

@@ -4,8 +4,6 @@ import Sailfish.Silica 1.0
 Item {
     id: root;
 
-    property int bh: Math.min(400, Screen.height);
-    property int bw: Math.min(540, Screen.width);
     height: img.height
 
     //var ww = Math.min(200, w), hh = Math.min(h * ww/w, 200);
@@ -20,7 +18,8 @@ Item {
     Image {
         id: img;
         anchors.horizontalCenter: root.horizontalCenter;
-        sourceSize.width: Screen.width - Theme.paddingSmall;
+        width: Math.max(0, root.width - Theme.paddingSmall * 2)
+        sourceSize.width: width
         cache: true;
         fillMode:  Image.PreserveAspectFit
         source: content;

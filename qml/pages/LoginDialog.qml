@@ -4,6 +4,7 @@ import "../js/main.js" as JS
 
 Dialog {
     id: loginDialog
+    //allowedOrientations: Orientation.All
     property bool phoneMode: loginType.currentIndex === 0
     property bool requestingCode: false
     property int countdown: 0
@@ -85,7 +86,10 @@ Dialog {
     }
 
     SilicaFlickable {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         contentHeight: loginColumn.height
 
         Column {
@@ -200,7 +204,7 @@ Dialog {
         Rectangle { anchors.fill: parent; color: "#b0000000" }
 
         Column {
-            width: parent.width - Theme.horizontalPageMargin * 2
+            width: Math.min(parent.width, appwindow.pageContentWidth) - Theme.horizontalPageMargin * 2
             anchors.centerIn: parent
             spacing: Theme.paddingMedium
 

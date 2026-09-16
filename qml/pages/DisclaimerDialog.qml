@@ -1,10 +1,15 @@
 import QtQuick 2.0
 import Sailfish.Silica 1.0
 
-Dialog {
+Page {
     id: disclaimer
+    //allowedOrientations: Orientation.All
+    backNavigation: false
     SilicaFlickable {
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         contentHeight: disclaimercolumn.height + disclaimercolumn.spacing
 
         Column {
@@ -12,7 +17,7 @@ Dialog {
             width: parent.width
             spacing: Theme.paddingSmall
 
-            DialogHeader {
+            PageHeader {
                 title: "免责声明"
             }
 
@@ -26,8 +31,18 @@ Dialog {
                 wrapMode: Text.WordWrap
                 text: disclaimertext
             }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "同意并继续"
+                onClicked: appwindow.acceptDisclaimer()
+            }
+
+            Button {
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: "取消并退出"
+                onClicked: appwindow.quitApplication()
+            }
         }
     }
-    onAccepted: config.accepted = true
-    onRejected: Qt.quit();
 }

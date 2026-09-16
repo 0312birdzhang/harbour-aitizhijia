@@ -206,9 +206,52 @@ function saveLoginResult(content, fallbackName) {
     app.userhash = hash;
     app.username = user.userName || user.username || fallbackName || "";
     app.nickname = user.userNick || user.nickName || user.nickname || app.username;
+    app.userid = user.userId || user.userid || 0;
+    app.avatar = user.userAvatar || user.avatar ||
+                 (app.userid ? avatarUrl(app.userid) : "");
     signalcenter.loginSuccessed();
     app.showMessage("登录成功：" + app.nickname);
+    refreshUserProfile();
     return true;
+}
+
+function refreshUserProfile(page) {
+    if (!app.userhash) {
+        if (page && page.profileLoadFailed)
+            page.profileLoadFailed("请先登录");
+        return;
+    }
+    request(userDataUrl(app.userhash), function(xhr) {
+        if (xhr.status < 200 || xhr.status >= 300) {
+            if (page && page.profileLoadFailed)
+                page.profileLoadFailed("资料加载失败（" + xhr.status + "）");
+            return;
+        }
+        try {
+            var result = parseJson(xhr.responseText);
+            if (result.ok !== 1 || !result.userinfo) {
+                if (page && page.profileLoadFailed)
+                    page.profileLoadFailed(result.msg || "资料加载失败");
+                return;
+            }
+            var user = result.userinfo;
+            app.userid = user.userid || app.userid;
+            app.username = user.username || app.username;
+            app.nickname = user.nickname || app.nickname;
+            if (!app.avatar && app.userid)
+                app.avatar = avatarUrl(app.userid);
+            app.rank = user.rank || 0;
+            app.experience = user.exp || 0;
+            app.remainExperience = user.remainexp || 0;
+            app.coins = user.coin || 0;
+            app.rankDays = user.rankdays || "";
+            if (page && page.profileLoaded)
+                page.profileLoaded();
+        } catch (error) {
+            if (page && page.profileLoadFailed)
+                page.profileLoadFailed("资料数据无法解析");
+        }
+    });
 }
 
 function requestCaptcha(page) {

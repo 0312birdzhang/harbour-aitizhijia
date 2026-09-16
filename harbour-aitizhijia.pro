@@ -30,7 +30,9 @@ DISTFILES += qml/harbour-aitizhijia.qml \
     qml/js/base64.js \
     qml/pages/DisclaimerDialog.qml \
     qml/pages/LoginDialog.qml \
+    qml/pages/UserCenter.qml \
     qml/pages/CommentDialog.qml \
+    qml/components/UserActionItem.qml \
     qml/components/SlidePage.qml \
     qml/pages/CommentsPage.qml \
     qml/components/NewsListComponents.qml \

@@ -2,9 +2,13 @@ import QtQuick 2.0
 import Sailfish.Silica 1.0
 Page {
     id: aboutPage
+    //allowedOrientations: Orientation.All
     SilicaFlickable {
         id: about
-        anchors.fill: parent
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        width: appwindow.pageContentWidth
         contentHeight: aboutRectangle.height
 
         VerticalScrollDecorator { flickable: about }
@@ -91,7 +95,15 @@ Page {
                      "release 3<br/>
                         修复评论、登录及头像接口的 HTTP 302 错误<br/>" +
                      "version 0.4.0<br/>
-                        支持手机验证码登录、楼中楼显示及指定楼层回复"
+                        支持手机验证码登录、楼中楼显示及指定楼层回复<br/>" +
+                     "version 0.4.0 release 2<br/>
+                        新增个人主页，显示头像、昵称、等级、经验和金币<br/>" +
+                     "version 0.4.0 release 3<br/>
+                        修复用户中心图标，并接入官方签到规则<br/>" +
+                     "version 0.4.0 release 4<br/>
+                        修复首次取消退出，支持屏幕旋转和大屏布局<br/>" +
+                     "version 0.4.0 release 5<br/>
+                        重做首次声明操作，并修复页面方向继承"
                 width: parent.width - Theme.paddingLarge * 2
                 wrapMode: Text.WordWrap
                 anchors.horizontalCenter: parent.horizontalCenter

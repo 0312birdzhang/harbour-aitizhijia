@@ -16,7 +16,7 @@ Name:       harbour-aitizhijia
 
 Summary:    IT Home client for Sailfish OS
 Version:    0.4.0
-Release:    1
+Release:    5
 Group:      Qt/Qt
 License:    LICENSE
 BuildArch:  noarch

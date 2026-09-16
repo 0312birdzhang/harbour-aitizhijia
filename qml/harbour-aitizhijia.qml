@@ -11,13 +11,20 @@ ApplicationWindow
     id: appwindow
     property bool loading: false
     property string appname: "AiTi之家"
+    property real pageContentWidth: Math.min(width, Theme.itemSizeHuge * 8)
     property alias userhash: config.userhash
     property alias username: config.username
     property alias nickname: config.nickname
+    property alias userid: config.userid
+    property alias avatar: config.avatar
+    property alias rank: config.rank
+    property alias experience: config.experience
+    property alias remainExperience: config.remainExperience
+    property alias coins: config.coins
+    property alias rankDays: config.rankDays
     property bool loggedIn: userhash !== ""
     initialPage: config.accepted ? firstpage : discclaimer
     cover: Qt.resolvedUrl("cover/CoverPage.qml")
-    allowedOrientations: Orientation.Portrait
 
     ConfigurationGroup{
         id: config
@@ -26,6 +33,13 @@ ApplicationWindow
         property string userhash: ""
         property string username: ""
         property string nickname: ""
+        property int userid: 0
+        property string avatar: ""
+        property int rank: 0
+        property int experience: 0
+        property int remainExperience: 0
+        property int coins: 0
+        property string rankDays: ""
     }
 
     Notification{
@@ -93,8 +107,6 @@ ApplicationWindow
     Component{
         id:discclaimer
         DisclaimerDialog{
-            acceptDestination: firstpage
-            acceptDestinationAction: PageStackAction.Replace
         }
     }
 
@@ -113,6 +125,15 @@ ApplicationWindow
         notification.show(message)
     }
 
+    function quitApplication() {
+        Qt.quit()
+    }
+
+    function acceptDisclaimer() {
+        config.accepted = true
+        pageStack.replace(firstpage)
+    }
+
     function openLogin() {
         pageStack.push(Qt.resolvedUrl("pages/LoginDialog.qml"))
     }
@@ -121,6 +142,13 @@ ApplicationWindow
         userhash = ""
         username = ""
         nickname = ""
+        userid = 0
+        avatar = ""
+        rank = 0
+        experience = 0
+        remainExperience = 0
+        coins = 0
+        rankDays = ""
         notification.show("已注销")
     }
 

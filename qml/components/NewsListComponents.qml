@@ -30,10 +30,11 @@ BackgroundItem{
             top: parent.top
             margins: Theme.paddingMedium
         }
-        fillMode: Image.Stretch
+        fillMode: Image.PreserveAspectCrop
         width: parent.width/3.5
+        height: width * 0.65
         sourceSize.width: width
-        sourceSize.height: width * Screen.width * 1.3 / Screen.height
+        sourceSize.height: height
         Image{
             z:2
             anchors.fill: parent
